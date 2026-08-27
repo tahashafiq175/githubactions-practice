@@ -28,7 +28,13 @@ jobs:
       - name: Run Container
         run: docker run -d -p 8082:8082 --name githubaction-springboot-container githubaction-springboot-app:v1
 
+      - name: Check Container Status
+        run: docker ps -a
+
       - name: Smoke Test
         run: |
           sleep 10
-          curl -f http://localhost:8082/get/taha
+          echo "===== CONTAINER LOGS ====="
+          docker logs githubaction-springboot-container
+          echo "===== CURL TEST ====="
+          curl -v http://localhost:8082/get/taha
