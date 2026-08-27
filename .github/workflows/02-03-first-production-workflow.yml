@@ -15,7 +15,8 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-
+      - name: Give Maven Wrapper Permission
+        run: chmod +x CICDDEMO/mvnw
       - name: Build Spring Boot Application
         run: |
           cd CICDDEMO
