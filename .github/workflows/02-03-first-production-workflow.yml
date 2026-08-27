@@ -1,16 +1,33 @@
 name: 01-03 SpringBoot CI Workflow
+
 on: push
+
 jobs:
   springboot-ci-job:
     runs-on: ubuntu-latest
+
     steps:
-      -  name: CheckOutRepository
-         uses: actions/checkout@v7
-      -  name: Build Docker Image
-         run: docker build -t githubaction-springboot-app:v1 ./CICDDEMO
-      -  name: Run Container
-         run: docker run -d -p 8082:8082 --name githubaction-springboot-container githubaction-springboot-app:v1
-      -  name: Smoke Test
-         run: |
-           sleep 5
-           curl http://localhost:8082/get/taha
+      - name: CheckOutRepository
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build Spring Boot Application
+        run: |
+          cd CICDDEMO
+          ./mvnw clean package -DskipTests
+
+      - name: Build Docker Image
+        run: docker build -t githubaction-springboot-app:v1 ./CICDDEMO
+
+      - name: Run Container
+        run: docker run -d -p 8082:8082 --name githubaction-springboot-container githubaction-springboot-app:v1
+
+      - name: Smoke Test
+        run: |
+          sleep 10
+          curl -f http://localhost:8082/get/taha
