@@ -37,7 +37,7 @@ jobs:
           tags: tahaalways/githubactions:v1
 
       - name: Run Container
-        run: docker run -d -p 8082:8080 --name githubaction-springboot-container githubaction-springboot-app:v1
+        run: docker run -d -p 8082:8080 --name githubaction-springboot-container tahaalways/githubactions:v1
 
       - name: Check Container Status
         run: docker ps -a
