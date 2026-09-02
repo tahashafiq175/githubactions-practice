@@ -23,8 +23,7 @@ jobs:
         steps:
             - name: Print The Trigger Event
               run: |
-               'echo "Workflow triggered successfully!"'
-               'echo "The Trigger Event is: ${{ github.event_name }}"'
-               'echo "The Trigger Action is: ${{ github.event.action }}"'
-               'echo "The Trigger Branch is: ${{ github.ref }}"'
-               
+                echo "Workflow triggered successfully!"
+                echo "The Trigger Event is: ${{ github.event_name }}"
+                echo "The Trigger Action is: ${{ github.event.action }}"
+                echo "The Trigger Branch is: ${{ github.ref }}"
