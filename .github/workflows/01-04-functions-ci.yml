@@ -1,0 +1,98 @@
+name: 04 - Spring Boot Build Test Publish to GHCR
+
+on:
+    push:
+        branches:
+            - main
+            - feature/*
+    pull_request:
+        branches:
+            - main
+        types:
+            - opened
+            - synchronize
+            - ready_for_review
+permissions:
+    contents: read
+    packages: write
+
+env:
+    APPLICATION_NAME: cicddemo
+
+jobs:
+    build-test-publish:
+        runs-on: ubuntu-latest
+        steps:
+
+  # 1. Get source code
+            - name: Checkout Repository
+              uses: actions/checkout@v6
+
+  # 2. Build Spring Boot application
+            - name: Build Spring Boot Application
+              working-directory: ./CICDDEMO
+              run: |
+                chmod +x mvnw
+                ./mvnw clean package -DskipTests
+
+  # 3. Generate a unique image tag
+            - name: Generate Dynamic Image Tag
+              run: |
+                echo "IMAGE_TAG=v${GITHUB_RUN_NUMBER}-${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+  # 4. Display information
+            - name: Display Build Information
+              run: |
+                echo "Application: $APPLICATION_NAME"
+                echo "Repository: $GITHUB_REPOSITORY"
+                echo "Actor: $GITHUB_ACTOR"
+                echo "Branch: $GITHUB_REF_NAME"
+                echo "Image Tag: $IMAGE_TAG"
+
+  # 5. Login to GitHub Container Registry
+            - name: Login to GHCR
+              uses: docker/login-action@v3
+              with:
+                registry: ghcr.io
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+
+  # 6. Build Docker image
+            - name: Build Docker Image
+              uses: docker/build-push-action@v7
+              with:
+                context: ./CICDDEMO
+                push: false
+                tags: ghcr.io/${{ github.repository_owner }}/${{ env.APPLICATION_NAME }}:${{ env.IMAGE_TAG }}
+
+  # 7. Run container
+            - name: Run Container
+              run: |
+                docker run -d \
+                -p 8082:8082 \
+                --name cicddemo-container \
+                ghcr.io/${{ github.repository_owner }}/${{ env.APPLICATION_NAME }}:${{ env.IMAGE_TAG }}
+
+  # 8. Smoke test
+            - name: Smoke Test Application
+              run: |
+                sleep 10
+                curl --fail http://localhost:8082
+
+  # 9. Push image to GHCR
+            - name: Push Docker Image to GHCR
+              if: ${{ success() }}
+              run: |
+                docker push ghcr.io/${{ github.repository_owner }}/${{ env.APPLICATION_NAME }}:${{ env.IMAGE_TAG }}
+
+  # 10. Collect logs if something fails
+            - name: Collect Container Logs
+              if: ${{ failure() }}
+              run: |
+                docker logs cicddemo-container
+
+  # 11. Cleanup
+            - name: Cleanup Container
+              if: ${{ always() }}
+              run: |
+                docker rm -f cicddemo-container || true
