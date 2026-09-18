@@ -89,8 +89,8 @@ jobs:
   # 8. Smoke test
           - name: Smoke Test Application
             run: |
-              sleep 10
-              curl --fail http://localhost:8080
+              sleep 25
+              curl --fail http://localhost:8080/get/taha
 
   # 9. Push image to GHCR
           - name: Push Docker Image to GHCR
