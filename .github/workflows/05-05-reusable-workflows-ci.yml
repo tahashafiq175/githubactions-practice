@@ -11,4 +11,4 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checking the Environment Value
-              run: format(echo "You have selected  ${{ inputs.environment }} for the environment input.")
+              run: echo "You have selected  ${{ inputs.environment }} for the environment input."
