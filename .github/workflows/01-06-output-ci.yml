@@ -1,0 +1,14 @@
+name: "First Output Workflow to demonstrate the purpose of output"
+on:
+    push:
+        branches:
+            - main
+jobs:
+    output-workflow:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set Output Value
+              id: set-output
+              run: echo "output=Hello from step 1 of first job of first workflow" >> $GITHUB_OUTPUT
+            - name: Print Output Value
+              run: 'echo "The Output Value is : ${{ steps.set-output.outputs.output }}"'
