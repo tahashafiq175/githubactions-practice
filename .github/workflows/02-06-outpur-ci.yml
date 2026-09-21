@@ -1,0 +1,22 @@
+name: "transferring the output workflow from the step of one job to another job"
+on:
+    push:
+        branches:
+            - main
+jobs:
+    output-producer:
+        runs-on: ubuntu-latest
+        outputs:
+            producer: ${{ steps.set-output.outputs.producer }}
+        steps:
+            - name: Set OutPut 
+              id: set-output
+              run: echo "producer= Hello World Is Produced " >> $GITHUB_OUTPUT
+    output-consumer:
+        needs: output-producer
+        runs-on: ubuntu-latest
+        steps:
+            - name: Print Output Value
+              run: 'echo "The Output Value is : ${{ needs.output-producer.outputs.producer }}"'
+
+
