@@ -1,0 +1,29 @@
+name: 01-04-Filters-and-ActivityType
+on:
+    push:
+        branches:
+            - "develop"
+            - "feature/*"
+        paths:
+            - "app/**"
+            - "docker/**"
+            - ".github/workflows/**"
+    pull_request:
+        types:
+            - opened
+            - reopened
+            - synchronize
+            - closed
+            - ready_for_review
+        branches:
+            - "main"
+jobs:
+    validation-job:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Print The Trigger Event
+              run: |
+                echo "Workflow triggered successfully!"
+                echo "The Trigger Event is: ${{ github.event_name }}"
+                echo "The Trigger Action is: ${{ github.event.action }}"
+                echo "The Trigger Branch is: ${{ github.ref }}"
