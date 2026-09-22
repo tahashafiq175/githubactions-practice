@@ -1,0 +1,91 @@
+# name: "practing workflow other essentials"
+# on:
+#     workflow_dispatch:
+#         inputs:
+#             version:
+#                 description: "please enter your version number"
+#                 required: true
+#                 type: string
+# jobs:
+#     env-input:
+#         env:
+#             version: ${{inputs.version}}
+#         runs-on: ubuntu-latest    
+#         steps:
+#             - name: Checking the Environment Variable
+#               run: echo "The version number you entered is $version"
+
+
+#This is a simply yml file to demonstrate the use of environment variables in a GitHub Actions workflow. The workflow is triggered manually using the `workflow_dispatch` event, which allows users to input a version number. The input is then stored as an environment variable and echoed in the workflow steps.
+#like in line 12 we are using the env keyword to define an environment variable named version, which is assigned the value of the input provided by the user. This allows us to use the version variable in subsequent steps of the workflow.
+
+# name: "default value workflow to demonstrate the purpose of default value"
+# on:
+#     workflow_dispatch:
+#         inputs:
+#             environment:
+#                 description: "Please Choose Your Environment"
+#                 required: true
+#                 default: "dev"
+#                 type: string
+# jobs:
+#     default-value-input:
+#         runs-on: ubuntu-latest
+#         steps:
+#             - name: Default Selection
+#               if: ${{inputs.environment == 'dev'}}
+#               run: echo "You have selected the default value for the environment input."
+#             - name: Non-default Selection
+#               if: ${{inputs.environment != 'dev'}}
+#               run: echo "You have selected a non-default value for the environment input."  
+
+
+
+#This is demonstrating the use of default values in a GitHub Actions workflow. The workflow is triggered manually using the `workflow_dispatch` event, which allows users to input an environment value. If the user does not provide a value, the default value of "dev" is used. The workflow then checks if the selected value is the default or a non-default value and echoes the appropriate message.
+#Like if we does not select any value for the environment input, the workflow will use the default value of "dev" and execute the first step. If a different value is selected, the second step will be executed instead.
+#from step 1 and 2 we come to know few things : One is if else ladded does not exists in yml file
+#2ndly multiple if conditions inside a single job is not possible in yml file
+#3rdly we can use multiple steps and if inside each to achieve the same functionality as if else ladder.
+#4thly we an use if else ladder inside a single step but it will be a bit complex and not recommended as it will make the code less readable and maintainable.
+#like we just have to write run: | and inside that we can write our if else ladder using bash script or any other scripting language.
+#because anything inside run: | will be treated as a script and we can use any scripting language to write our if else ladder.
+
+name: Deploy Application
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select deployment environment"
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      version:
+        description: "Docker image version"
+        required: true
+        type: string
+      run_tests:
+        description: "Run tests before deployment?"
+        required: true
+        type: boolean
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.run_tests }}
+    steps:
+      - name: Run tests
+        run: echo "Running tests..."
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment information
+        run: |
+          echo "Application deployment"
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Version: ${{ inputs.version }}"
+      - name: Deploy
+        run: |
+          echo "Deploying version ${{ inputs.version }}"
+          echo "To ${{ inputs.environment }}"

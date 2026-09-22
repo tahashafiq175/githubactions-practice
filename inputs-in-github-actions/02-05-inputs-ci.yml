@@ -1,0 +1,21 @@
+name: "Second Input Workflow to demonstrate the purpose of choice"
+on:
+    workflow_dispatch:
+        inputs:
+            environment:
+                description: "Please Choose Your Environment"
+                required: true
+                type: choice
+                options:
+                    - Production
+                    - Development
+                    - staging
+jobs:
+    Input-Selection:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Print the Input Value from the Provided Options
+              run: |
+                echo "The Input Value is: ${{ inputs.environment }}"
+
+#This is again a simple workflow and the purpose of this workflow is to demonstrate how to use choice inputs in a workflow_dispatch event. The workflow will be triggered manually and the user will be prompted to select a value for the "environment" input from the provided options. The selected value will then be printed to the console.

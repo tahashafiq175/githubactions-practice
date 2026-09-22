@@ -1,0 +1,25 @@
+name: "The First Input workflow"
+on:
+    workflow_dispatch:
+        inputs:
+            environment:
+                description: "The Environment to deploy too"
+                required: true
+                type: string
+jobs:
+    manually-input-job:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Print the Input Value
+              run: |
+                 echo "The Input Value is: ${{ inputs.environment }}" 
+
+
+
+
+#this is a simply workflow and the purpose of this workflow is to demonstrate how to use inputs in a workflow_dispatch event. The workflow will be triggered manually and the user will be prompted to enter a value for the "environment" input. The value entered by the user will then be printed to the console. 
+#Like we have declared input naming environment such that this input has declare with three characteristis
+#One is description think of this as in programming we do or print a line before a input to understand
+#make us know what acutaly we r inputing 
+#sedonc one is required which is true means we cannot skip that input 
+#and third One  is type like the data type of this workflow is string #                

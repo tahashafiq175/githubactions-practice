@@ -1,0 +1,14 @@
+name: "Resuable Workflow to demonstrate the purpose of reusable workflow"
+on:
+    workflow_call:
+        inputs:
+            environment:
+                description: "Please Choose Your Environment"
+                required: true
+                type: string
+jobs:
+    Reusable-Workflow:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checking the Environment Value
+              run: echo "You have selected  ${{ inputs.environment }} for the environment input."
