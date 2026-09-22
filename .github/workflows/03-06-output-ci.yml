@@ -1,0 +1,24 @@
+name: "Understanding the conversion of String output to Integer output in GitHub Actions"
+on:
+    push:
+        branches:
+            - main
+jobs:
+    output-producer:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set OutPut
+              id: set-output
+              run: echo "producer= 10 " >> $GITHUB_OUTPUT
+            - name: Convert String to Integer
+              id: convert-output
+              run: |
+                echo "${{ steps.set-output.outputs.producer }}"
+                echo "producer_string=${{ steps.set-output.outputs.producer }}" >> $GITHUB_OUTPUT
+                producer_integer=$(( ${{ steps.set-output.outputs.producer }} +10 ))
+                echo "producer_integer=$producer_integer"
+            - name: Using the FormJson
+              id: form-json
+              run: |
+                producer_integers=${{fromjson(steps.convert-output.outputs.producer_string )}}
+                echo $producer_integers
