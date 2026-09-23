@@ -21,4 +21,5 @@ jobs:
               id: get-output
               env:
                 Message: ${{ steps.set-output.outputs.message }}
-              run: $Message
+              run: |
+                    printf '%s\n' "$MESSAGE"
