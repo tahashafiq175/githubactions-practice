@@ -1,0 +1,19 @@
+name: "Multiples Line stored inside the output variable in GitHub Actions"
+on:
+    push:
+        branches:
+            - main
+jobs:
+    output-producer:
+        runs-on: ubuntu_latest
+        steps:
+            - name: Set-Output
+              id: set-output
+              run: |
+                echo message<<EOF
+                echo "My Name is Taha Shafiq"
+                echo "I am a Devops Engineer"
+                echo "I am a Six Semester Student"
+            - name: Get-Output
+              id: get-output
+              run: ${{ steps.set-output.outputs.message }}
