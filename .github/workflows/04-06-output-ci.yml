@@ -5,15 +5,18 @@ on:
             - main
 jobs:
     output-producer:
-        runs-on: ubuntu_latest
+        runs-on: ubuntu-latest
         steps:
             - name: Set-Output
               id: set-output
               run: |
-                echo message<<EOF
-                echo "My Name is Taha Shafiq"
-                echo "I am a Devops Engineer"
-                echo "I am a Six Semester Student"
+                        {
+                            echo 'message<<EOF'
+                            echo "My Name is Taha Shafiq"
+                            echo "I am a Devops Engineer"
+                            echo "I am a Six Semester Student"
+                            echo EOF
+                        } >> "$GITHUB_OUTPUT"
             - name: Get-Output
               id: get-output
               run: ${{ steps.set-output.outputs.message }}
