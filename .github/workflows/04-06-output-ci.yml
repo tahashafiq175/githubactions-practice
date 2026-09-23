@@ -15,7 +15,7 @@ jobs:
                             echo "My Name is Taha Shafiq"
                             echo "I am a Devops Engineer"
                             echo "I am a Six Semester Student"
-                            echo EOF
+                            echo 'EOF'
                         } >> "$GITHUB_OUTPUT"
             - name: Get-Output
               id: get-output
