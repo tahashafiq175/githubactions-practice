@@ -19,4 +19,4 @@ jobs:
                         } >> "$GITHUB_OUTPUT"
             - name: Get-Output
               id: get-output
-              run: ${{ steps.set-output.outputs.message }}
+              run: echo ${{ steps.set-output.outputs.message }}
