@@ -10,14 +10,15 @@ jobs:
               run: |
                   DELIMITER=$(openssl rand -hex 16)
                   {
-                   echo 'message << $DELIMITER'
+                   echo "message<<$DELIMITER"
                    echo "Hello How are you"
                    echo "I am Fine"
                    echo "and whats about you"
-                   echo '$DELIMITER'
+                   echo "$DELIMITER"
                   } >> "$GITHUB_OUTPUT"
             - name: "Consuming the OUTPUT"
-              run: ${{steps.Delimiter.outputs.message}}       
+              run: |
+                echo "${{steps.Delimiter.outputs.message}}"       
                 
             
 
