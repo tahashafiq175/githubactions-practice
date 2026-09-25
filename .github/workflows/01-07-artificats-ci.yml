@@ -1,15 +1,11 @@
-name: 01-03 SpringBoot CI Workflow
-
+name: 01 -07 SpringBoot - Artifacts CI Workflow
 on: push
-
 jobs:
     springboot-ci-job:
         runs-on: ubuntu-latest
-
         steps:
             - name: CheckOutRepository
               uses: actions/checkout@v7
-
             - name: Setup Java
               uses: actions/setup-java@v4
               with:
@@ -21,16 +17,12 @@ jobs:
               run: |
                   cd CICDDEMO
                   ./mvnw clean package -DskipTests
-
             - name: Build Docker Image
               run: docker build -t githubaction-springboot-app:v1 ./CICDDEMO
-
             - name: Run Container  
               run: docker run -d -p 8082:8080 --name githubaction-springboot-container githubaction-springboot-app:v1
- 
             - name: Check Container Status
               run: docker ps -a
- 
             - name: Smoke Test
               run: |
                   sleep 10
@@ -41,7 +33,6 @@ jobs:
             - name: Docker Logs
               run: |
                   echo logs githubaction-springboot-app:v1 > Container-logs.txt 2>&1
-
             - name: Upload Artifacts
               uses: actions/upload-artifact@v7
               with:
@@ -49,7 +40,6 @@ jobs:
                   path: | 
                       smoke-test-report.txt
                       Container-logs.txt
-
     review-job:
         runs-on: ubuntu-latest
         needs: springboot-ci-job
