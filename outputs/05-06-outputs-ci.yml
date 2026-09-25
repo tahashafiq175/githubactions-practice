@@ -1,0 +1,12 @@
+name: "Storing Action As OutPut"
+on:
+    push:
+        branch:
+            - main
+jobs:
+    action-as-output
+        runs-on: ubuntu-latest
+        steps:
+            - name: output-producer
+              id: actions
+                      
