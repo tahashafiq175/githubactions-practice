@@ -1,0 +1,23 @@
+name: "Delimiter and Outputs Relationship"
+on: 
+    push
+jobs:
+    Delimiter-Demo:
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Delimitor Demo"
+              id: Delimiter
+              run: |
+                  DELIMITER=$(openssl rand -hex 16)
+                  {
+                   echo 'message << $DELIMITER'
+                   echo "Hello How are you"
+                   echo "I am Fine"
+                   echo "and whats about you"
+                   echo '$DELIMITER'
+                  } >> "$GITHUB_OUTPUT"
+            - name: "Consuming the OUTPUT"
+              run: ${{steps.Delimiter.outputs.message}}       
+                
+            
+
