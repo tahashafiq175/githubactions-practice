@@ -1,0 +1,35 @@
+name: "Third Workflow to Demonstrate the purpose of Include"
+on: push
+jobs:
+    include-demonstration:
+        strategy:
+            matrix:
+                os: [ubuntu-latest,windows-latest]
+                java: [21,25,26]
+                include:
+                    - os: ubuntu-latest
+                      java: 26
+                      environment: production
+        runs-on: ${{matrix.os}}          
+        steps: 
+           - name: Display Matrix Information
+             run: |
+                echo "${{matrix.os}}"
+                echo ${{matrix.java}}
+                echo ${{matrix.environment}}
+           - name: CheckOutRepository
+             uses: actions/checkout@v4
+           
+           - name: setup-java
+             uses: actions/setup-java@v4
+             with:
+                java-version: ${{ matrix.java }}
+                distribution: 'temurin'
+
+           - name: Give Maven Wrapper Permission
+             run: chmod +x CICDDEMO/mvnw
+           - name: Build Spring Boot Application
+             run: |
+               cd CICDDEMO
+               ./mvnw clean package -DskipTests 
+
