@@ -15,8 +15,8 @@ jobs:
            - name: Display Matrix Information
              run: |
                 echo "${{matrix.os}}"
-                echo ${{matrix.java}}
-                echo ${{matrix.environment}}
+                echo "${{matrix.java}}"
+                echo "${{matrix.environment}}"
            - name: CheckOutRepository
              uses: actions/checkout@v4
            
