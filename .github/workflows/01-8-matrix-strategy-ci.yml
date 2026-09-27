@@ -5,7 +5,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                java: [17,21,25]
+                java: [21,25,26]
         steps:
            - name: CheckOutRepository
              uses: actions/checkout@v4
