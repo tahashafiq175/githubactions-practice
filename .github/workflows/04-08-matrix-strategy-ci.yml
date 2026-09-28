@@ -1,0 +1,45 @@
+name: "Workflow to Demonstrate the Purpose of Exclude"
+on: push
+jobs:
+    exclude-demonstration:
+        runs-on: ${{matrix.os}}
+        strategy:
+            fail-fast: false
+            max-parallel: 2  
+            matrix:
+                java: [17,21,25]
+                os: [windows-latest,ubuntu-latest]
+                exclude:
+                    - os: windows-latest
+                      java: 25
+                
+        steps:
+            - name: Displaying Information
+              run: |
+                echo "${{matrix.os}}"
+                echo "${{matrix.java}}"
+            
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+              
+            - name: setup java
+              uses: actions/setup-java@v4
+              with:
+                java-version: ${{ matrix.java }}
+                distribution: 'temurin'
+              
+            - name: Give Maven Wrapper Permission
+              run: chmod +x CICDDEMO/mvnw
+            - name: Build Spring Boot Application
+              run: |
+                cd CICDDEMO
+                ./mvnw clean package -DskipTests
+
+
+
+                # Simple analogy is that every thing works expcept the one that is mentioned in the exclude thing
+                like when os is windows-latest and java version is 25
+
+                # Fail-fast means if any of the test is failed remaining should work as it is
+
+                # max-parallel means how many parallel tasks run Simultanously
