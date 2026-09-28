@@ -38,7 +38,7 @@ jobs:
 
 
                 # Simple analogy is that every thing works expcept the one that is mentioned in the exclude thing
-                like when os is windows-latest and java version is 25
+                # like when os is windows-latest and java version is 25
 
                 # Fail-fast means if any of the test is failed remaining should work as it is
 
