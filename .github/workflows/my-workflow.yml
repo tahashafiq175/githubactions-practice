@@ -12,4 +12,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Step 1
-        run: echo "Hello, World! final step - job -2 "
+        run: echo "Hello, World! final step - job -2"

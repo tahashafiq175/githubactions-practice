@@ -11,31 +11,25 @@ jobs:
                 os: [windows-latest,ubuntu-latest]
                 exclude:
                     - os: windows-latest
-                      java: 25
-                
+                      java: 25                
         steps:
             - name: Displaying Information
               run: |
                 echo "${{matrix.os}}"
-                echo "${{matrix.java}}"
-            
+                echo "${{matrix.java}}"            
             - name: Checkout Repository
-              uses: actions/checkout@v4
-              
+              uses: actions/checkout@v4              
             - name: setup java
               uses: actions/setup-java@v4
               with:
                 java-version: ${{ matrix.java }}
-                distribution: 'temurin'
-              
+                distribution: 'temurin'              
             - name: Give Maven Wrapper Permission
               run: chmod +x CICDDEMO/mvnw
             - name: Build Spring Boot Application
               run: |
                 cd CICDDEMO
                 ./mvnw clean package -DskipTests
-
-
 
                 # Simple analogy is that every thing works expcept the one that is mentioned in the exclude thing
                 # like when os is windows-latest and java version is 25
