@@ -4,29 +4,12 @@ on:
         branches:
             - main
             - feature/*
-    pull_request:
-        branches:
-            - main
-        types:
-            - opened
-            - synchronize
-            - ready_for_review
-permissions:
-    contents: read
-    packages: write
-
-env:
-    APPLICATION_NAME: cicddemo
-
+            - develop
 jobs:
-    setup-job:
-        runs-on: ubuntu-latest
         
-  # 1. Get source code
     develop-dev-job:
         name: Deploy to Development
         if: github.ref_name=='develop'
-        needs: setup-job
         runs-on: ubuntu-latest
         environment: dev
         
@@ -130,7 +113,6 @@ jobs:
     develop-prod-job:
         name: Deploy to Development
         if: github.ref_name=='main'
-        needs: setup-job
         runs-on: ubuntu-latest
         environment: prod
 
