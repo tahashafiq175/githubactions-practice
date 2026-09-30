@@ -1,0 +1,259 @@
+name: 01 - Workflow to Demonstrate Environment Creation
+
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+      - develop
+
+env:
+  APPLICATION_NAME: cicddemo
+
+jobs:
+
+  # ============================================================
+  # 1. BUILD ONCE
+  # ============================================================
+
+  build-job:
+    name: Build Spring Boot Application
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Java
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # 3. Verify Java
+      - name: Verify Java and Maven
+        working-directory: ./CICDDEMO
+        run: |
+          java -version
+          javac -version
+
+      # 4. Build JAR
+      - name: Build Spring Boot Application
+        working-directory: ./CICDDEMO
+        run: |
+          chmod +x mvnw
+          ./mvnw clean package -DskipTests
+
+      # 5. Show generated files
+      - name: Show Build Output
+        working-directory: ./CICDDEMO
+        run: |
+          ls -lh target/
+
+      # 6. Upload JAR as artifact
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cicddemo-jar
+          path: CICDDEMO/target/*.jar
+
+
+  # ============================================================
+  # 2. DEVELOPMENT
+  # ============================================================
+
+  develop-dev-job:
+    name: Deploy to Development
+
+    needs: build-job
+
+    if: github.ref_name == 'develop'
+
+    runs-on: ubuntu-latest
+
+    environment: dev
+
+    steps:
+
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Download JAR produced by build-job
+      - name: Download JAR Artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: cicddemo-jar
+          path: CICDDEMO/target
+
+      # 3. Display environment
+      - name: Display Environment Information
+        run: |
+          echo "Environment: Development"
+          echo "Application URL: ${{ vars.APP_URL }}"
+          echo "Debug Mode: ${{ vars.DEBUG_MODE }}"
+
+      # 4. Generate image tag
+      - name: Generate Dynamic Image Tag
+        run: |
+          echo "IMAGE_TAG=v${GITHUB_RUN_NUMBER}-${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      # 5. Display build information
+      - name: Display Build Information
+        run: |
+          echo "Application: $APPLICATION_NAME"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Actor: $GITHUB_ACTOR"
+          echo "Branch: $GITHUB_REF_NAME"
+          echo "Image Tag: $IMAGE_TAG"
+
+      # 6. Login to GHCR
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 7. Build Docker image
+      - name: Build Docker Image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./CICDDEMO
+          push: false
+          tags: ghcr.io/${{ github.repository_owner }}/${{ env.APPLICATION_NAME }}:${{ env.IMAGE_TAG }}
+
+      # 8. Run container
+      - name: Run Container
+        run: |
+          docker run -d \
+            -p 8080:8080 \
+            --name cicddemo-container \
+            ghcr.io/${{ github.repository_owner }}/${{ env.APPLICATION_NAME }}:${{ env.IMAGE_TAG }}
+
+      # 9. Smoke test
+      - name: Smoke Test Application
+        run: |
+          sleep 25
+          curl --fail http://localhost:8080/get/taha
+
+      # 10. Push image
+      - name: Push Docker Image to GHCR
+        if: success()
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/${{ env.APPLICATION_NAME }}:${{ env.IMAGE_TAG }}
+
+      # 11. Logs if failure
+      - name: Collect Container Logs
+        if: failure()
+        run: |
+          docker logs cicddemo-container
+
+      # 12. Cleanup
+      - name: Cleanup Container
+        if: always()
+        run: |
+          docker rm -f cicddemo-container || true
+
+
+  # ============================================================
+  # 3. PRODUCTION
+  # ============================================================
+
+  develop-prod-job:
+    name: Deploy to Production
+
+    needs: build-job
+
+    if: github.ref_name == 'main'
+
+    runs-on: ubuntu-latest
+
+    environment: prod
+
+    steps:
+
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Download SAME JAR
+      - name: Download JAR Artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: cicddemo-jar
+          path: CICDDEMO/target
+
+      # 3. Display environment
+      - name: Display Environment Information
+        run: |
+          echo "Environment: Production"
+          echo "Application URL: ${{ vars.APP_URL }}"
+          echo "Debug Mode: ${{ vars.DEBUG_MODE }}"
+
+      # 4. Generate image tag
+      - name: Generate Dynamic Image Tag
+        run: |
+          echo "IMAGE_TAG=v${GITHUB_RUN_NUMBER}-${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      # 5. Display build information
+      - name: Display Build Information
+        run: |
+          echo "Application: $APPLICATION_NAME"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Actor: $GITHUB_ACTOR"
+          echo "Branch: $GITHUB_REF_NAME"
+          echo "Image Tag: $IMAGE_TAG"
+
+      # 6. Login to GHCR
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 7. Build Docker image
+      - name: Build Docker Image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./CICDDEMO
+          push: false
+          tags: ghcr.io/${{ github.repository_owner }}/${{ env.APPLICATION_NAME }}:${{ env.IMAGE_TAG }}
+
+      # 8. Run container
+      - name: Run Container
+        run: |
+          docker run -d \
+            -p 8080:8080 \
+            --name cicddemo-container \
+            ghcr.io/${{ github.repository_owner }}/${{ env.APPLICATION_NAME }}:${{ env.IMAGE_TAG }}
+
+      # 9. Smoke test
+      - name: Smoke Test Application
+        run: |
+          sleep 25
+          curl --fail http://localhost:8080/get/taha
+
+      # 10. Push image
+      - name: Push Docker Image to GHCR
+        if: success()
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/${{ env.APPLICATION_NAME }}:${{ env.IMAGE_TAG }}
+
+      # 11. Logs
+      - name: Collect Container Logs
+        if: failure()
+        run: |
+          docker logs cicddemo-container
+
+      # 12. Cleanup
+      - name: Cleanup Container
+        if: always()
+        run: |
+          docker rm -f cicddemo-container || true
