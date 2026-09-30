@@ -1,4 +1,4 @@
-name: 02 - Workflow to Demonstrate the creation of Artifact to store common configuration
+name: 02 - Workflow to Demonstrate the creation of Artifact to store common configuration (Enhancements)
 
 on:
   push:
