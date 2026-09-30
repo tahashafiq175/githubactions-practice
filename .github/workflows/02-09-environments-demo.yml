@@ -1,4 +1,4 @@
-name: 01 - Workflow to Demonstrate Environment Creation
+name: 02 - Workflow to Demonstrate the creation of Artifact to store common configuration
 
 on:
   push:
