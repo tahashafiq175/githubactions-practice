@@ -1,0 +1,9 @@
+name: "First workflow custom action"
+description: "This is a custom action that prints a hello world message."
+
+runs:   
+  using: composite
+  steps:
+    - name: Print Hello World
+      shell: bash
+      run: echo "Hello, World!"  
