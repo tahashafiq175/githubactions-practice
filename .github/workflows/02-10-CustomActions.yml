@@ -1,4 +1,4 @@
-name: "First Custom Action Workflow"
+name: "Second Custom Action Workflow"
 on:
     push
 jobs:
