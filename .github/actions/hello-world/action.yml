@@ -1,9 +1,26 @@
-name: "First workflow custom action"
-description: "This is a custom action that prints a hello world message."
+# name: "First workflow custom action"
+# description: "This is a custom action that prints a hello world message."
 
-runs:   
+# runs:   
+#   using: composite
+#   steps:
+#     - name: Print Hello World
+#       shell: bash
+#       run: echo "Hello, World!"
+
+
+name: "2nd workflow custom action to demonstrate inputs and custom actions"
+description: "This is a custom action that demonstrate relation between Custome Actions and inputs."
+
+inputs:
+  name:
+    description: "Name of the person to greet"
+    type: string
+    required: true
+
+runs:
   using: composite
   steps:
     - name: Print Hello World
       shell: bash
-      run: echo "Hello, World!"  
+      run: echo "Hello, ${{ inputs.name }}!"
