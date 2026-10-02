@@ -9,18 +9,47 @@
 #       run: echo "Hello, World!"
 
 
-name: "2nd workflow custom action to demonstrate inputs and custom actions"
-description: "This is a custom action that demonstrate relation between Custome Actions and inputs."
+# name: "2nd workflow custom action to demonstrate inputs and custom actions"
+# description: "This is a custom action that demonstrate relation between Custome Actions and inputs."
+
+# inputs:
+#   name:
+#     description: "Name of the person to greet"
+#     type: string
+#     required: true
+
+# runs:
+#   using: composite
+#   steps:
+#     - name: Print Hello World
+#       shell: bash
+#       run: echo "Hello, ${{ inputs.name }}!"
+
+
+
+name: "3rd workflow custom action to demonstrate multiple inputs and custom actions"
+description: "This is a custom action that demonstrate relation between Custome Actions and multiple inputs."
 
 inputs:
-  name:
-    description: "Name of the person to greet"
-    type: string
-    required: true
-
+    java-version:
+      description: "Java version to install"
+      type: string
+      required: false
+      default: "21"
+    mvn-version:
+      description: "Maven version to install"
+      type: string
+      required: false
+      default: "3.9.4"
 runs:
-  using: composite
-  steps:
-    - name: Print Hello World
-      shell: bash
-      run: echo "Hello, ${{ inputs.name }}!"
+    using: composite
+    steps:  
+      - name: Install Java
+        shell: bash
+        run: |
+          echo "Installing Java version ${{ inputs.java-version }}..."
+        
+      - name: Install Maven
+        shell: bash
+        run: |
+          echo "Installing Maven version ${{ inputs.mvn-version }}..."    

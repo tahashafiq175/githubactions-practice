@@ -1,0 +1,14 @@
+name: "Third Custom Action Workflow with multiple inputs"
+on:
+    push
+jobs:
+    custom-action-job:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Run Custom Action
+              uses: ./.github/actions/hello-world      
+              with:
+                java-version: "21"
+                mvn-version: "3.9.4"
