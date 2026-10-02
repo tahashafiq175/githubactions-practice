@@ -1,6 +1,11 @@
 name: "Third Custom Action Workflow with multiple inputs"
 on:
     push
+# inputs:
+#     java-version:
+#         description: "Please enter java version
+#         type: string
+#         required: false"    
 jobs:
     custom-action-job:
         runs-on: ubuntu-latest
@@ -9,6 +14,7 @@ jobs:
               uses: actions/checkout@v4
             - name: Run Custom Action
               uses: ./.github/actions/hello-world      
-              with:
-                java-version: "21"
-                mvn-version: "3.9.4"
+            #   with:
+            #     java-version: "21"
+            #     mvn-version: "3.9.4"
+
