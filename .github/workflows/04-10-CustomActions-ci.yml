@@ -15,7 +15,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
-              uses: ./.github/actions/hello-world      
+              uses: actions/checkout@v4
+            - name: Run Custom Action
+              uses: ./.github/actions/hello-world
               with:
                 java-version: ${{ inputs.java-version }}
                 mvn-version: ${{ inputs.maven-version }}                
