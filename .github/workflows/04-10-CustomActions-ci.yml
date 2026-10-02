@@ -1,4 +1,4 @@
-name: "Fourth Custom Action Workflow with predefined actions"
+name: "Fourth Custom Action Workflow without predefined actions"
 on:
     workflow_dispatch:
         inputs:
@@ -19,4 +19,3 @@ jobs:
               with:
                 java-version: ${{ github.event.inputs.java-version }}
                 mvn-version: ${{ github.event.inputs.maven-version }}                
-                
