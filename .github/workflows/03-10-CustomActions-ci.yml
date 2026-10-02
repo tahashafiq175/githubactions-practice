@@ -1,11 +1,15 @@
 name: "Third Custom Action Workflow with multiple inputs"
 on:
-    push
-# inputs:
-#     java-version:
-#         description: "Please enter java version
-#         type: string
-#         required: false"    
+    workflow_dispatch:
+        inputs:
+            java-version:
+                description: "Please enter java version"
+                type: string
+                required: false
+            maven-version:
+                description: "Please enter maven version"
+                type: string
+                required: false    
 jobs:
     custom-action-job:
         runs-on: ubuntu-latest
