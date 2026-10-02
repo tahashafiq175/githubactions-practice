@@ -76,14 +76,11 @@ runs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ inputs.java-version }}
-          distribution: 'temurin'
+        shell: bash
+        run: |
+          echo "Setting up Java version ${{ inputs.java-version }}..."
       - name: Setup Maven
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ inputs.java-version }}
-          distribution: 'temurin'
-          cache: maven  
+        shell: bash
+        run: |
+          echo "Setting up Maven version ${{ inputs.mvn-version }}..."
 

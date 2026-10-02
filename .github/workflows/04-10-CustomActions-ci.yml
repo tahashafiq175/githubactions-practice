@@ -17,5 +17,5 @@ jobs:
             - name: Checkout repository
               uses: ./.github/actions/hello-world      
               with:
-                java-version: ${{ github.event.inputs.java-version }}
-                mvn-version: ${{ github.event.inputs.maven-version }}                
+                java-version: ${{ inputs.java-version }}
+                mvn-version: ${{ inputs.maven-version }}                
