@@ -27,8 +27,37 @@
 
 
 
-name: "3rd workflow custom action to demonstrate multiple inputs and custom actions"
-description: "This is a custom action that demonstrate relation between Custome Actions and multiple inputs."
+# name: "3rd workflow custom action to demonstrate multiple inputs and custom actions"
+# description: "This is a custom action that demonstrate relation between Custome Actions and multiple inputs."
+
+# inputs:
+#     java-version:
+#       description: "Java version to install"
+#       type: string
+#       required: false
+#       default: "21"
+#     mvn-version:
+#       description: "Maven version to install"
+#       type: string
+#       required: false
+#       default: "3.9.4"
+# runs:
+#     using: composite
+#     steps:  
+#       - name: Install Java
+#         shell: bash
+#         run: |
+#           echo "Installing Java version ${{ inputs.java-version }}..."
+        
+#       - name: Install Maven
+#         shell: bash
+#         run: |
+#           echo "Installing Maven version ${{ inputs.mvn-version }}..."    
+
+
+
+name: "4th workflow custom action to demonstrate actions inside custom actions"
+description: "This is a custom action that demonstrate relation between Custom Actions and predefined actions."
 
 inputs:
     java-version:
@@ -42,14 +71,19 @@ inputs:
       required: false
       default: "3.9.4"
 runs:
-    using: composite
+    using: composite      
     steps:  
-      - name: Install Java
-        shell: bash
-        run: |
-          echo "Installing Java version ${{ inputs.java-version }}..."
-        
-      - name: Install Maven
-        shell: bash
-        run: |
-          echo "Installing Maven version ${{ inputs.mvn-version }}..."    
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: 'temurin'
+      - name: Setup Maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: 'temurin'
+          cache: maven  
+

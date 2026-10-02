@@ -1,0 +1,22 @@
+name: "Fourth Custom Action Workflow with predefined actions"
+on:
+    workflow_dispatch:
+        inputs:
+            java-version:
+                description: "Please enter java version"
+                type: string
+                required: false
+            maven-version:
+                description: "Please enter maven version"
+                type: string
+                required: false
+jobs:
+    custom-action-job:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: ./.github/actions/hello-world      
+              with:
+                java-version: ${{ github.event.inputs.java-version }}
+                mvn-version: ${{ github.event.inputs.maven-version }}                
+                
