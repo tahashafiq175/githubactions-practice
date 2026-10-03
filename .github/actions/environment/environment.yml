@@ -1,0 +1,25 @@
+name: "Environment Variables Custom Action Workflow"
+description: "This workflow demonstrates the use of environment variables in a custom action."
+inputs:
+    environment-name:
+        description: "Please enter the environment name"
+        type: string
+        required: false
+runs:
+    using: composite
+    steps:
+        - name: Checkout repository
+          shell: bash
+          uses: actions/checkout@v4
+        - name: Set Environment Variable
+          shell: bash
+          env:
+            ENVIRONMENT_NAME: ${{ inputs.environment-name }}
+          run: |
+              if[ ${ENVIRONMENT_NAME} == "development" ]; then
+                  echo "Running in development environment"
+              elif [ ${ENVIRONMENT_NAME} == "production" ]; then
+                  echo "Running in production environment"
+              else
+                  echo "Unknown environment"
+              

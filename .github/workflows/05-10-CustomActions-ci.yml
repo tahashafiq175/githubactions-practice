@@ -1,0 +1,19 @@
+name: "Fifth Custom Action Workflow for Environment Variables "
+on:
+    workflow_dispatch:
+        inputs:
+            environment-name:
+                description: "Please enter the environment name"
+                type: string
+                required: false
+                default: "development"
+jobs:
+    environment-action-job:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Run Environment Variables Custom Action
+              uses: ./.github/actions/environment
+              with:
+                environment-name: ${{ inputs.environment-name }}       
