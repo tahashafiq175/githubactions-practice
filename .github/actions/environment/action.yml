@@ -1,4 +1,4 @@
-name: "Environment Variables Custom Action Workflow"
+name: "Environment Variables Custom Action Workflow latest"
 description: "This workflow demonstrates the use of environment variables in a custom action."
 inputs:
     environment-name:
