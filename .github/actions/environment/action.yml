@@ -9,17 +9,16 @@ runs:
     using: composite
     steps:
         - name: Checkout repository
-          shell: bash
           uses: actions/checkout@v4
         - name: Set Environment Variable
           shell: bash
           env:
             ENVIRONMENT_NAME: ${{ inputs.environment-name }}
           run: |
-              if[ ${ENVIRONMENT_NAME} == "development" ]; then
+              if [ ${ENVIRONMENT_NAME} == "development" ]; then
                   echo "Running in development environment"
               elif [ ${ENVIRONMENT_NAME} == "production" ]; then
                   echo "Running in production environment"
               else
                   echo "Unknown environment"
-              
+              fi
