@@ -32,6 +32,6 @@ runs:
         - name: Return Build Output
           shell: bash
           run: |
-            Jar_File= $(find ./CICDDEMO/target -name "*.jar" -f | head -n 1)
+            Jar_File=$(find ./CICDDEMO/target -name "*.jar" -f | head -n 1)
             echo "Build output JAR file: $Jar_File"
             echo "jar_file: $Jar_File" >> $GITHUB_OUTPUT
