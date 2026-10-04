@@ -1,0 +1,38 @@
+name: "7th Custom Action CI Workflow for Outputs"
+on:
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        description: "Please enter the environment name"
+        type: string
+        required: false
+        default: "development"
+      java-version:
+        description: "Specify the Java version to use (e.g., 8, 11, 17)"
+        type: string
+        required: false
+        default: "21"
+jobs:
+  custom-actions-ci-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Java Build Action
+        uses: ./.github/actions/java-build
+        with:
+          java-version: ${{ inputs.java-version }}
+
+      - name: Printing the jar_file output from the Java Build Action
+        run: |
+          echo "Jar File Output from Java Build Action: ${{ steps.java-build.outputs.jar_file }}"   
+      - name: Run Environment Variables Action
+        id: environment-action
+        uses: ./.github/actions/environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Display Environment Variable Output
+        run: |
+          echo "Environment Name Output from Custom Action: ${{ steps.environment-action.outputs.environment-name }}"
+          
