@@ -33,6 +33,3 @@ jobs:
         uses: ./.github/actions/environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Display Environment Variable Output
-        run: |
-          echo "Environment Name Output from Custom Action: ${{ steps.environment-action.outputs.environment-name }}"
