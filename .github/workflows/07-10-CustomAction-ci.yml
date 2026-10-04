@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Java Build Action
+        id: java-build
         uses: ./.github/actions/java-build
         with:
           java-version: ${{ inputs.java-version }}
@@ -35,4 +36,3 @@ jobs:
       - name: Display Environment Variable Output
         run: |
           echo "Environment Name Output from Custom Action: ${{ steps.environment-action.outputs.environment-name }}"
-          
