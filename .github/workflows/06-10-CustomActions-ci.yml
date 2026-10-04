@@ -1,0 +1,30 @@
+name: "Custom Actions CI for Java Build"
+on:
+  push:
+  pull_rwequest:
+  workflow_dispatch:
+    inputs:
+      java-version:
+        description: "Specify the Java version to use (e.g., 8, 11, 17)"
+        required: false
+        default: "21"
+      environment-name:
+        description: "Specify the environment name (e.g., development, production)"
+        required: false
+        default: "development"
+jobs:
+    custom-actions-ci-job:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+    
+          - name: Run Java Build Action
+            uses: ./.github/actions/java-build
+            with:
+                java-version: ${{ inputs.java-version }}
+    
+          - name: Run Environment Variables Action
+            uses: ./.github/actions/environment
+            with:
+                environment-name: ${{ inputs.environment-name }}
