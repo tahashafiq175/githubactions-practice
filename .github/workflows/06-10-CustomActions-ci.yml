@@ -1,7 +1,7 @@
 name: "Custom Actions CI for Java Build"
 on:
   push:
-  pull_rwequest:
+  pull_request:
   workflow_dispatch:
     inputs:
       java-version:
