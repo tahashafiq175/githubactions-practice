@@ -20,7 +20,7 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
             - name: Run Conditional Testing Custom Action
-              uses: ./.github/actions/conditional-testing
+              uses: ./.github/actions/java-build-condition
               with:
                 java-version: ${{ inputs.java-version }}
                 test-condition: ${{ inputs.test-condition }}
