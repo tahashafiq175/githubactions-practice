@@ -1,4 +1,4 @@
-name: "Action to build Java project based on a condition"
+name: "Action to build Java project based on a test condition"
 description: "This action builds a Java project using Maven based on a specified condition."
 inputs:
     java-version:
