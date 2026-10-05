@@ -29,6 +29,7 @@ runs:
           run: |
             cd CICDDEMO
             ./mvnw clean package -DskipTests
+            
         - name: Return Build Output
           id: build
           shell: bash
