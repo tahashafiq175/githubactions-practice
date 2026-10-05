@@ -1,0 +1,26 @@
+name: "8th Custom Action Workflow for Condtional testing"
+on:
+    workflow_dispatch:
+        inputs:
+            java-version:
+                description: "Please enter the Java version"
+                type: string
+                required: false
+                default: "21"
+            test-condition:
+                description: "Please enter the test condition (true/false)"
+                type: boolean
+                required: false
+                default: false
+
+jobs:
+    conditional-testing-job:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Run Conditional Testing Custom Action
+              uses: ./.github/actions/conditional-testing
+              with:
+                java-version: ${{ inputs.java-version }}
+                test-condition: ${{ inputs.test-condition }}
