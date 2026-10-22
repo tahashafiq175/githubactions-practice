@@ -1,0 +1,25 @@
+name: "Concurrency demo Part 2"
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+concurrency:
+    group:  concurrency-demo-2
+    cancel-in-progress: true       
+jobs:
+    Concurrency-Demo-Job-2:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: "start workflow"
+              run: |
+                echo "workflow started"
+                echo "RUN ID : ${{ github.run_id }}"
+                echo "COMMIT SHA: ${{ github.sha}}"
+
+            - name: "Simulate a long-running task"
+              run:  |
+                echo "long-running task started"
+                sleep 120
+
