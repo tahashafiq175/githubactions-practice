@@ -17,7 +17,7 @@ jobs:
               run: |
                 echo "workflow started"
                 echo "RUN ID : ${{ github.run_id }}"
-                echo "COMMIT SHA: ${{ github.sha}}
+                echo "COMMIT SHA: ${{ github.sha}}"
 
             - name: "Simulate a long-running task"
               run:  |
