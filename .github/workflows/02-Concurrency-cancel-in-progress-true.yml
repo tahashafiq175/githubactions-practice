@@ -1,4 +1,4 @@
-name: "Concurrency demo Part 2"
+name: "Concurrency demo Part 2 " 
 on:
     push:
         branches:
