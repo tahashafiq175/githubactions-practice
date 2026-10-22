@@ -1,4 +1,4 @@
-name: "GitHub Actions Concurrency Demo"
+name: "GitHub Actions Concurrency Dem"
 on:
     push:
         branches:
