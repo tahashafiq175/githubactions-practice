@@ -1,5 +1,5 @@
 
-name: "Job Concurrency 2 - Independent Jobs"
+name: "Job Concurrency 2 - Independent Jobs "
 
 on:
   workflow_dispatch:
