@@ -1,0 +1,30 @@
+
+name: "Job Concurrency 2 - Independent Jobs"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build application
+        run: |
+          echo "Build started"
+          sleep 60
+          echo "Build finished"
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: production-deployment
+      cancel-in-progress: false
+
+    steps:
+      - name: Deploy application
+        run: |
+          echo "Deployment started"
+          sleep 90
+          echo "Deployment finished"
