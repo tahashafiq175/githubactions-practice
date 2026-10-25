@@ -1,4 +1,3 @@
-
 name: "2 - Deploy API"
 
 on:
@@ -30,4 +29,3 @@ jobs:
           echo "API deployment started"
           sleep 60
           echo "API deployment finished"
-w
