@@ -1,0 +1,43 @@
+# The name shown in the GitHub Actions tab.
+name: "03 - Runner Isolation"
+
+# Start the workflow when we manually run it.
+on:
+  workflow_dispatch:
+
+jobs:
+  # JOB 1: Create a file on the first runner.
+  create-file:
+    # GitHub provides an Ubuntu runner for this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create a File
+        run: |
+          # Create a file named message.txt and write a message into it.
+          echo "Hello from Job 1" > message.txt
+
+          # Read the file and print its message.
+          cat message.txt
+
+  # JOB 2: Try to read the file created by Job 1.
+  read-file:
+    # This job also gets an Ubuntu runner.
+    # But it gets a separate job environment and workspace.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Try to Read Job 1 File
+        run: |
+          # Check whether message.txt exists in this job's workspace.
+          if [ -f message.txt ]; then
+
+            # If the file exists, print its contents.
+            cat message.txt
+
+          else
+
+            # If the file does not exist, print this message.
+            echo "message.txt does not exist in this job"
+
+          fi

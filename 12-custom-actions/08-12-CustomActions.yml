@@ -1,0 +1,56 @@
+# Name of the workflow
+name: "8th Custom Action Workflow for Conditional Testing"
+
+# Run this workflow manually from GitHub Actions
+on:
+  workflow_dispatch:
+    inputs:
+      # Ask the user which Java version to use
+      java-version:
+        description: "Please enter the Java version"
+        type: string
+        required: false
+        default: "21"
+
+      # Ask the user whether to enable the test condition
+      test-condition:
+        description: "Please enter the test condition (true/false)"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  conditional-testing-job:
+    # Run this job on an Ubuntu machine provided by GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository files to the runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Run our custom action for conditional testing
+      - name: Run Conditional Testing Custom Action
+        uses: ./.github/actions/java-build-condition
+
+        # Pass both input values to the custom action
+        with:
+          # Send the Java version entered by the user
+          java-version: ${{ inputs.java-version }}
+
+          # Send the true/false value selected by the user
+          test-condition: ${{ inputs.test-condition }}
+
+# Purpose of this workflow:
+# 1. The user manually starts the workflow.
+# 2. GitHub asks for a Java version and a true/false test condition.
+# 3. The checkout step downloads the repository files.
+# 4. The workflow passes both values to the custom action using with.
+# 5. The custom action can use the Java version and test condition
+#    to decide what tasks to perform.
+#
+# Important:
+# This workflow passes the test-condition value to the custom action.
+# The custom action must contain the actual conditional logic that decides
+# whether testing should run. Passing false does not skip this workflow step
+# by itself.

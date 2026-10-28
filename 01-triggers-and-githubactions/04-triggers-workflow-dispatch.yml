@@ -1,0 +1,56 @@
+name: "02 - Manual Workflow Trigger"
+
+# This workflow runs when a user manually starts it from the GitHub Actions tab.
+# Before the workflow runs, GitHub asks the user to select a deployment environment.
+on:
+  workflow_dispatch:
+    # Inputs allow the user to provide values when manually triggering the workflow.
+    inputs:
+      environment:
+        # This description appears beside the input on GitHub.
+        description: "Choose deployment environment"
+
+        # The user must select a value before starting the workflow.
+        required: true
+
+        # The choice type displays a dropdown menu instead of a text field.
+        type: choice
+
+        # These are the only three values the user can select.
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  manual-job:
+    # GitHub provides an Ubuntu virtual machine to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Display Manual Trigger Information"
+
+        # STEP-LEVEL ENVIRONMENT VARIABLES
+        # These variables are available to the commands in this step.
+        env:
+          # Reads the environment selected by the user.
+          # inputs.environment is a GitHub Actions context value.
+          ENVIRONMENT: ${{ inputs.environment }}
+
+          # Stores the name of the event that triggered the workflow.
+          # For a manual trigger, the value is workflow_dispatch.
+          EVENT_NAME: ${{ github.event_name }}
+
+          # Stores the commit SHA associated with this workflow run.
+          COMMIT_SHA: ${{ github.sha }}
+
+          # Stores the Git reference associated with the workflow run.
+          GIT_REF: ${{ github.ref }}
+
+        # The shell executes these commands on the Ubuntu runner.
+        run: |
+          # The shell reads each value from the step's environment variables.
+          echo "Event: $EVENT_NAME"
+          echo "Commit SHA: $COMMIT_SHA"
+          echo "Git Ref: $GIT_REF"
+          echo "Selected Environment: $ENVIRONMENT"

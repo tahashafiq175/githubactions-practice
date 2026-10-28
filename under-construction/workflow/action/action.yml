@@ -1,0 +1,12 @@
+name: "Custom java script action"
+description: "Creating a custom action calling javascript action"
+
+inputs:
+    name:
+        description: "Please enter the input name"
+        type: string
+        required: true
+
+runs:
+    using: node20
+    main: index.js

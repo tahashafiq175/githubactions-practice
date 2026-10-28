@@ -1,0 +1,46 @@
+name: "03 - Scheduled Workflow"
+
+# This workflow can be triggered in TWO ways:
+# 1. Automatically according to the schedule defined below.
+# 2. Manually from the Actions tab using workflow_dispatch.
+on:
+  schedule:
+    # This cron expression schedules the workflow to run every 5 minutes.
+    # */5 means every 5 minutes.
+    # The five fields represent: minute, hour, day of month, month, day of week.
+    # GitHub Actions schedules use UTC time.
+    - cron: "*/5 * * * *"
+
+  # Allows us to start the workflow manually whenever we want.
+  workflow_dispatch:
+
+jobs:
+  scheduled-job:
+    # GitHub provides an Ubuntu virtual machine to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Display Schedule Information"
+        # The run keyword tells GitHub Actions to execute these shell commands.
+        run: |
+          # EVENT NAME
+          # github.event_name tells us which event triggered this workflow.
+          # For a scheduled run, its value is "schedule".
+          # For a manual run, its value is "workflow_dispatch".
+          echo "Event Name: ${{ github.event_name }}"
+
+          # COMMIT SHA
+          # github.sha provides the commit SHA associated with this workflow run.
+          # For scheduled workflows, it is associated with the last commit
+          # on the default branch at the time the run is triggered.
+          echo "Commit SHA: ${{ github.sha }}"
+
+          # GIT REF
+          # github.ref identifies the Git reference associated with the run.
+          # Scheduled workflows run against the default branch.
+          # Manual runs may use the branch or reference selected when starting them.
+          echo "Git Ref: ${{ github.ref }}"
+
+          # This is a normal shell message, not a GitHub Actions expression.
+          # It prints a simple confirmation message in the workflow logs.
+          echo "Scheduled workflow executed."

@@ -1,0 +1,32 @@
+
+name: "02 - Simulating Continuous Integration"
+
+# Start the workflow whenever code is pushed
+# to the main branch.
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Announce that the CI process has started.
+      - name: Start CI
+        run: echo "CI has started because new code was pushed."
+
+      # Step 2: Simulate checking the code.
+      # This echo command does NOT actually compile the code.
+      - name: Simulate code validation
+        run: echo "Checking whether the code is valid..."
+
+      # Step 3: Simulate running tests.
+      # Real tests require actual test commands or a test framework.
+      - name: Simulate tests
+        run: echo "Running automated tests..."
+
+      # Step 4: Display the simulated test result.
+      - name: Show result
+        run: echo "All simulated checks passed!"

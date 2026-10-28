@@ -1,0 +1,26 @@
+name: "First javascript custom action"
+on:
+    workflow_dispatch:
+
+        inputs:
+             name:
+                description: "please enter urn name"
+                required: true
+                default: "Taha Shafiq"
+                type: string
+jobs:
+    custom-javascript-action:
+        runs-on: ubuntu-latest                
+        steps:
+          - name: Checkout Repository
+            uses: actions/checkout@v7
+
+          - name: Install Action Dependencies
+            working-directory: ./.github/actions/workflow-summary
+            run: npm install
+
+          - name: Execute JavaScript Action
+            uses: ./.github/actions/workflow-summary
+            with:
+                name: Taha shafiq
+

@@ -1,0 +1,38 @@
+name: "01 - Push Event Information"
+
+# This workflow runs automatically whenever a push event occurs
+# in the repository, such as when you push commits to GitHub.
+on:
+  push:
+
+jobs:
+  event-info:
+    # GitHub provides an Ubuntu virtual machine to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Print Event Information"
+        # The run keyword tells GitHub Actions to execute these shell commands.
+        run: |
+          # EVENT NAME
+          # github.event_name tells us which event triggered the workflow.
+          # Because this workflow runs on a push event, the value will be "push".
+          # GitHub Actions evaluates the expression before the shell executes the command.
+          echo "Event Name: ${{ github.event_name }}"
+
+          # COMMIT SHA
+          # github.sha provides the commit SHA associated with this workflow run.
+          # A SHA is a unique identifier for a specific Git commit.
+          # For a push event, it generally identifies the tip commit of the pushed ref.
+          echo "Commit SHA: ${{ github.sha }}"
+
+          # GIT REF
+          # github.ref tells us which Git reference triggered the workflow.
+          # For a branch push, it usually looks like refs/heads/branch-name.
+          # For example, a push to the main branch produces refs/heads/main.
+          echo "Git Ref: ${{ github.ref }}"
+
+          # REPOSITORY
+          # github.repository gives the repository name in OWNER/REPOSITORY format.
+          # For example: tahashafiq175/githubactions-practice.
+          echo "Repository: ${{ github.repository }}"

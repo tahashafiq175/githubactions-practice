@@ -1,0 +1,43 @@
+# Name of the workflow
+name: "Second Input Workflow to Demonstrate the Purpose of Choice"
+
+# Run this workflow manually from GitHub Actions
+on:
+  workflow_dispatch:
+    # Define the inputs the user must provide when starting the workflow
+    inputs:
+      environment:
+        # Display a message telling the user what to choose
+        description: "Please Choose Your Environment"
+
+        # The user must select an option before starting the workflow
+        required: true
+
+        # The input type is choice, so GitHub provides a dropdown menu
+        # instead of asking the user to type a value manually
+        type: choice
+
+        # These are the options available in the dropdown menu
+        options:
+          - Production
+          - Development
+          - staging
+
+jobs:
+  Input-Selection:
+    # GitHub provides an Ubuntu runner to execute this job
+    runs-on: ubuntu-latest
+
+    steps:
+      # Print the option selected by the user
+      - name: Print the Input Value from the Provided Options
+        run: |
+          # The inputs context retrieves the user's selected option
+          echo "The Input Value is: ${{ inputs.environment }}"
+
+# Purpose of this workflow:
+# This workflow demonstrates how to use a choice input with workflow_dispatch.
+# When the user manually starts the workflow, GitHub displays a dropdown menu
+# containing Production, Development, and staging.
+# The user selects one option, and GitHub passes the selected value to the workflow.
+# Finally, the workflow prints the selected value in the console.

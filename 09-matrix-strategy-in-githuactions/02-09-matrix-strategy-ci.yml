@@ -1,0 +1,55 @@
+# Name of the workflow
+name: "Second Workflow Example to Demonstrate Multiple Matrices"
+
+# Run the workflow whenever code is pushed
+on: push
+
+jobs:
+  Multiple-Matrixes:
+
+    # Create different combinations using operating systems and Java versions
+    strategy:
+      matrix:
+        # Operating systems to use
+        os:
+          - ubuntu-latest
+          - windows-latest
+
+        # Java versions to install
+        java:
+          - 21
+          - 25
+          - 26
+
+    # Each job runs on the operating system selected by the matrix
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Step 1: Download the repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Install the Java version selected by the matrix
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+
+      # Step 3: Give the Maven Wrapper permission to run
+      # Note: chmod is suitable for Ubuntu, but not for the default Windows shell
+      - name: Give Maven Wrapper Permission
+        if: runner.os == 'Linux'
+        run: chmod +x CICDDEMO/mvnw
+
+      # Step 4: Build the Spring Boot application
+      - name: Build Spring Boot Application
+        working-directory: CICDDEMO
+        # Ubuntu uses ./mvnw; Windows uses mvnw.cmd
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            ./mvnw.cmd clean package -DskipTests
+          else
+            ./mvnw clean package -DskipTests
+          fi
+        shell: bash

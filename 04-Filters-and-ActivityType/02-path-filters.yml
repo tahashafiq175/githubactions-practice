@@ -1,0 +1,25 @@
+
+name: "02 - Path Filters"
+
+on:
+  push:
+    # First filter: the push must target main.
+    branches:
+      - main
+
+    # Second filter: at least one changed path must match.
+    paths:
+      - 'CICDDEMO/**'
+      - 'Dockerfile'
+
+jobs:
+  explain-path-filter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Explain the Matching Change
+        run: |
+          echo "A push to main matched the path filters."
+          echo "GitHub selected this workflow because of the changed paths."
+          echo "This is a path-filter demonstration."
+

@@ -1,0 +1,52 @@
+
+# This is a separate workflow for deploying the API.
+name: "2 - Deploy API"
+
+# This workflow can also be started manually.
+on:
+  workflow_dispatch:
+    # Ask the user which environment to deploy the API to.
+    inputs:
+      environment:
+        description: "Choose deployment environment"
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+        required: true
+        default: development
+
+jobs:
+  deploy:
+    # Run this job on an Ubuntu virtual machine.
+    runs-on: ubuntu-latest
+
+    concurrency:
+      # IMPORTANT:
+      # This formula is exactly the same as deploy-app.yml.
+      #
+      # If the user selects production, this job joins
+      # the deploy-production concurrency group.
+      #
+      # Both workflow files can therefore share the same group.
+      group: deploy-${{ inputs.environment }}
+
+      # Do not automatically cancel the running deployment.
+      cancel-in-progress: false
+
+    steps:
+      - name: Show selected environment
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+
+          # Display the group name for our experiment.
+          echo "Concurrency group: deploy-${{ inputs.environment }}"
+
+          echo "API deployment started"
+
+          # Keep this job running so we can test
+          # whether the two workflows share a group.
+          sleep 60
+
+          echo "API deployment finished"

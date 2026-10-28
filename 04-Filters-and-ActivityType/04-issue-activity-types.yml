@@ -1,0 +1,22 @@
+
+name: "04 - Issue Activity Types"
+
+on:
+  issues:
+    # React only to these issue activities.
+    types:
+      - opened
+      - closed
+      - labeled
+
+jobs:
+  explain-issue-activity:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Display Issue Activity
+        run: |
+          echo "A selected issue activity triggered this workflow."
+          echo "Activity: ${{ github.event.action }}"
+          echo "Issue number: ${{ github.event.issue.number }}"
+          echo "Issue title: ${{ github.event.issue.title }}"

@@ -1,0 +1,31 @@
+# Name of the workflow
+name: "Second Custom Action Workflow"
+
+# Run this workflow whenever code is pushed to the repository
+on: push
+
+jobs:
+  custom-action-job:
+    # Run this job on an Ubuntu machine provided by GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository files to the runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Run our own custom action
+      - name: Run Custom Action
+        uses: ./.github/actions/hello-world
+
+        # Pass the name value to the custom action
+        with:
+          name: "Taha Shafiq"
+
+# Purpose of this workflow:
+# 1. GitHub starts the workflow whenever code is pushed.
+# 2. The checkout step downloads the repository files.
+# 3. The uses keyword runs our custom action from the specified folder.
+# 4. The with keyword passes input values to the custom action.
+# 5. Here, we pass "Taha Shafiq" as the value of the name input.
+# 6. The custom action receives this value and can use it to perform its task.

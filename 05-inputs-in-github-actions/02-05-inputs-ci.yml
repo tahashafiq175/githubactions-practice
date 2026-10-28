@@ -1,0 +1,37 @@
+# Name of the workflow
+name: "Boolean Input Workflow to Demonstrate the Purpose of Boolean"
+
+# Run this workflow manually
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        # Explain what the user needs to choose
+        description: "Please Choose Your Environment"
+
+        # The user must provide a value
+        required: true
+
+        # Boolean means the input can be either true or false
+        # GitHub displays this input as a checkbox
+        type: boolean
+
+jobs:
+  Boolean-Input:
+    # Run this job on an Ubuntu machine provided by GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checking the Boolean Value
+
+        # Run this step only when the user checks the box (true)
+        if: ${{ inputs.environment }}
+
+        # Print a message if the condition is true
+        run: echo "You have selected True for the environment input."
+
+# Purpose of this workflow:
+# When the user starts the workflow manually, GitHub displays a checkbox.
+# If the user checks the box, the input value is true, so the step runs.
+# If the user leaves the box unchecked, the input value is false,
+# so the step is skipped.

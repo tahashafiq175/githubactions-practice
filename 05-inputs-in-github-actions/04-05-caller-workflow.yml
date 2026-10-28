@@ -1,0 +1,34 @@
+# Name of the workflow
+name: "Caller Workflow to Demonstrate Reusable Workflows"
+
+# Run this workflow manually
+on:
+  workflow_dispatch:
+    # Ask the user to enter an environment name
+    inputs:
+      environment:
+        # Explain what the user should enter
+        description: "Please Choose Your Environment"
+
+        # The user must provide a value
+        required: true
+
+        # The input accepts text, such as development or production
+        type: string
+
+jobs:
+  caller-workflow:
+    # Call another workflow instead of writing all the steps here
+    # This is the path to the reusable workflow in the same repository
+    uses: ./.github/workflows/05-05-reusable-workflows-ci.yml
+
+    # Send the user's selected environment to the reusable workflow
+    with:
+      environment: ${{ inputs.environment }}
+
+# Purpose of this workflow:
+# 1. The user manually starts the caller workflow.
+# 2. GitHub asks the user to enter an environment.
+# 3. The caller workflow passes that value to the reusable workflow.
+# 4. The reusable workflow receives the value through its environment input.
+# 5. The reusable workflow runs the jobs and steps defined in its own file.

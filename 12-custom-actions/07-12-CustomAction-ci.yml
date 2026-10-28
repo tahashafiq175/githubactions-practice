@@ -1,0 +1,71 @@
+# Name of the workflow
+name: "7th Custom Action CI Workflow for Outputs"
+
+# Run this workflow manually from GitHub Actions
+on:
+  workflow_dispatch:
+    inputs:
+      # Ask the user to enter an environment name
+      environment-name:
+        description: "Please enter the environment name"
+        type: string
+        required: false
+        default: "development"
+
+      # Ask the user to enter a Java version
+      java-version:
+        description: "Specify the Java version to use (e.g., 8, 11, 17)"
+        type: string
+        required: false
+        default: "21"
+
+jobs:
+  custom-actions-ci-job:
+    # Run this job on an Ubuntu machine
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository files to the runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Run our custom Java build action
+      - name: Run Java Build Action
+
+        # Give this step an ID so we can access its outputs later
+        id: java-build
+
+        uses: ./.github/actions/java-build
+        with:
+          # Pass the selected Java version to the custom action
+          java-version: ${{ inputs.java-version }}
+
+      # Print the JAR file path returned by the Java build action
+      - name: Printing the jar_file output from the Java Build Action
+        run: |
+          echo "Jar File Output from Java Build Action: ${{ steps.java-build.outputs.jar_file }}"
+
+      # Run our custom environment action
+      - name: Run Environment Variables Action
+
+        # Give this step an ID so it can be referenced later if needed
+        id: environment-action
+
+        uses: ./.github/actions/environment
+        with:
+          # Pass the selected environment name to the custom action
+          environment-name: ${{ inputs.environment-name }}
+
+# Purpose of this workflow:
+# 1. The user manually starts the workflow and provides input values.
+# 2. GitHub checks out the repository files.
+# 3. The Java build action receives the Java version and performs its tasks.
+# 4. The java-build ID identifies that step.
+# 5. steps.java-build.outputs.jar_file reads the jar_file output
+#    produced by that custom action.
+# 6. The workflow prints the returned JAR file path.
+# 7. The environment action receives the selected environment name.
+#
+# Important:
+# The Java build action must define and set an output named jar_file
+# in its action.yml file. Otherwise, the output may be empty.

@@ -1,0 +1,29 @@
+name: Program 2 - Contexts
+
+# This workflow runs when we manually trigger it from GitHub.
+on: workflow_dispatch
+
+jobs:
+  demo:
+    # GitHub provides an Ubuntu virtual machine to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Display GitHub information
+        # The run keyword tells GitHub Actions to execute these shell commands.
+        run: |
+          # The github.actor context provides the username of the person who triggered the workflow.
+          # GitHub evaluates ${{ github.actor }} before executing the shell commands.
+          echo "Actor: ${{ github.actor }}"
+
+          # The github.repository context provides the repository name in OWNER/REPOSITORY format.
+          # GitHub replaces ${{ github.repository }} with the actual repository name.
+          echo "Repository: ${{ github.repository }}"
+
+          # The github.event_name context tells us which event triggered the workflow.
+          # Because we use workflow_dispatch, the output will be workflow_dispatch.
+          echo "Event: ${{ github.event_name }}"
+
+          # The runner.os context provides the operating system of the runner.
+          # Since we selected ubuntu-latest, the output will be Linux.
+          echo "Runner OS: ${{ runner.os }}"

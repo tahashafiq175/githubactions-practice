@@ -1,0 +1,50 @@
+# Name of the workflow
+name: "Fifth Custom Action Workflow for Environment Variables"
+
+# Run this workflow manually
+on:
+  workflow_dispatch:
+    # Ask the user to enter an environment name
+    inputs:
+      environment-name:
+        description: "Please enter the environment name"
+
+        # The user can leave the input empty
+        required: false
+
+        # Accept text as the input value
+        type: string
+
+        # Use development if the user does not enter another value
+        default: "development"
+
+jobs:
+  environment-action-job:
+    # Run this job on an Ubuntu machine
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository files to the runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Run our own environment custom action
+      - name: Run Environment Variables Custom Action
+        uses: ./.github/actions/environment
+
+        # Pass the environment name to the custom action
+        with:
+          environment-name: ${{ inputs.environment-name }}
+
+# Purpose of this workflow:
+# 1. The user manually starts the workflow.
+# 2. GitHub asks for an environment name.
+# 3. If the user provides no different value, the default is development.
+# 4. The checkout step downloads the repository files.
+# 5. The with keyword passes the environment name to our custom action.
+# 6. The custom action can use this value in its own steps.
+#
+# Important:
+# The custom action must define an input named environment-name
+# in its action.yml file. Passing the value does not automatically
+# create an environment variable; the custom action must use the input.

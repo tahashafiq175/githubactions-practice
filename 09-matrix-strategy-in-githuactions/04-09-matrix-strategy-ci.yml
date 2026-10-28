@@ -1,0 +1,65 @@
+# Name of the workflow
+name: "Workflow to Demonstrate the Purpose of Exclude"
+
+# Run the workflow whenever code is pushed
+on: push
+
+jobs:
+  exclude-demonstration:
+    # Choose the operating system for each matrix combination
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      # If one job fails, allow the remaining jobs to continue
+      fail-fast: false
+
+      # Run a maximum of 2 matrix jobs at the same time
+      max-parallel: 2
+
+      matrix:
+        # Java versions to use
+        java: [17, 21, 25]
+
+        # Operating systems to use
+        os: [windows-latest, ubuntu-latest]
+
+        # Remove this specific combination from the matrix
+        exclude:
+          - os: windows-latest
+            java: 25
+
+    steps:
+      # Step 1: Display the current operating system and Java version
+      - name: Displaying Information
+        run: |
+          echo "Operating System: ${{ matrix.os }}"
+          echo "Java Version: ${{ matrix.java }}"
+
+      # Step 2: Download the repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 3: Install the Java version selected by the matrix
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+
+      # Step 4: Give the Maven Wrapper permission on Ubuntu
+      # Windows uses a different command, so skip this step there
+      - name: Give Maven Wrapper Permission
+        if: runner.os == 'Linux'
+        run: chmod +x CICDDEMO/mvnw
+
+      # Step 5: Build the Spring Boot application
+      - name: Build Spring Boot Application
+        working-directory: CICDDEMO
+        shell: bash
+        run: |
+          # Use the appropriate Maven Wrapper command for each OS
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            ./mvnw.cmd clean package -DskipTests
+          else
+            ./mvnw clean package -DskipTests
+          fi

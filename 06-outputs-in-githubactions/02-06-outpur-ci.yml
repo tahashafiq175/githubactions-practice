@@ -1,0 +1,50 @@
+# Name of the GitHub Actions workflow
+name: "Transferring Output from One Job to Another Job"
+
+# Run this workflow whenever code is pushed to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # Job 1: Produce an output value
+  output-producer:
+    # GitHub provides an Ubuntu virtual machine to run this job
+    runs-on: ubuntu-latest
+
+    # Make the output from a step available to other jobs
+    outputs:
+      # Create a job-level output named "producer"
+      # Get its value from the step whose ID is "set-output"
+      # That step's output is also named "producer"
+      producer: ${{ steps.set-output.outputs.producer }}
+
+    steps:
+      # Step 1: Create the output value
+      - name: Set Output
+        # Give this step an ID so we can access its output
+        id: set-output
+
+        # Save a key-value pair in GitHub's special output file
+        # "producer" is the output name
+        # "Hello World Is Produced" is the output value
+        run: echo "producer=Hello World Is Produced" >> $GITHUB_OUTPUT
+
+  # Job 2: Consume the output produced by Job 1
+  output-consumer:
+    # Wait for the output-producer job to finish successfully
+    # This dependency also makes its outputs available to this job
+    needs: output-producer
+
+    # GitHub provides an Ubuntu virtual machine to run this job
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Read and print the output received from Job 1
+      - name: Print Output Value
+
+        # Use the needs context to access the output of another job
+        # "output-producer" is the job ID
+        # "outputs.producer" refers to that job's output named "producer"
+        run: 'echo "The Output Value is: ${{ needs.output-producer.outputs.producer }}"'

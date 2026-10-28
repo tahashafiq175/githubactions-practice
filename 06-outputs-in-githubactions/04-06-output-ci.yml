@@ -1,0 +1,41 @@
+# Name of the workflow
+name: "Storing Multiple Lines in an Output"
+
+# Run the workflow when code is pushed to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  output-producer:
+    # Use an Ubuntu runner
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Store multiple lines in one output
+      - name: Set Output
+        id: set-output
+        run: |
+          {
+            # Start an output named "message"
+            echo 'message<<EOF'
+
+            # These lines become the output's value
+            echo "My Name is Taha Shafiq"
+            echo "I am a DevOps Engineer"
+            echo "I am a Six Semester Student"
+
+            # Mark the end of the output
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      # Step 2: Read and print the output
+      - name: Get Output
+        id: get-output
+        env:
+          # Store the output in an environment variable named MESSAGE
+          MESSAGE: ${{ steps.set-output.outputs.message }}
+        run: |
+          # Print all lines stored in MESSAGE
+          printf '%s\n' "$MESSAGE"

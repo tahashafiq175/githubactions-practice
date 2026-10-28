@@ -1,0 +1,27 @@
+
+# The name displayed in the GitHub Actions tab
+name: "01-Understanding the Contexts"
+
+# This workflow runs whenever a push event occurs.
+on: push
+
+jobs:
+  event-info-job:
+    # GitHub provides a fresh Ubuntu runner to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Print the Trigger Event"
+
+        # github is a predefined context provided by GitHub Actions.
+        # event_name is a property inside the github context.
+        #
+        # GitHub automatically knows which event started this workflow.
+        # We do not need to create a variable or assign a value ourselves.
+        #
+        # ${{ ... }} is the expression syntax used to access context values.
+        # GitHub evaluates this expression and replaces it with the actual value.
+        #
+        # Because this workflow is triggered by a push event,
+        # the expression evaluates to "push".
+        run: 'echo "The Trigger Event is: ${{ github.event_name }}"'

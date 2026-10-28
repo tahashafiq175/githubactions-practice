@@ -1,0 +1,30 @@
+# Name of the workflow
+name: "The First Input Workflow"
+
+# Run this workflow manually from GitHub Actions
+on:
+  workflow_dispatch:
+    # Define the inputs the user must provide when starting the workflow
+    inputs:
+      environment:
+        # Explain to the user what value they should enter
+        # Like a message shown before asking for input in a program
+        description: "The environment to deploy to"
+
+        # The user must provide a value; this input cannot be skipped
+        required: true
+
+        # The input value must be provided as a string (text)
+        type: string
+
+jobs:
+  manually-input-job:
+    # GitHub provides an Ubuntu runner to execute this job
+    runs-on: ubuntu-latest
+
+    steps:
+      # Print the value entered by the user when starting the workflow
+      - name: Print the Input Value
+        run: |
+          # The inputs context retrieves the value of the environment input
+          echo "The Input Value is: ${{ inputs.environment }}"

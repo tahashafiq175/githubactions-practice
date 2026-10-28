@@ -1,0 +1,48 @@
+# The name displayed in the GitHub Actions tab.
+name: "04 - Runner Capacity"
+
+# Start this workflow only when we manually run it.
+on:
+  workflow_dispatch:
+
+jobs:
+  # JOB 1: Check the resources of a standard runner.
+  standard-runner:
+    # Ask GitHub for a standard Ubuntu runner.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Inspect Standard Runner
+        run: |
+          # Print a heading so we can identify this runner's output.
+          echo "Standard GitHub-hosted runner"
+
+          # Show the number of CPU processing units available.
+          nproc
+
+          # Show memory (RAM) usage and available memory.
+          free -h
+
+          # Show disk space for the root filesystem.
+          df -h /
+
+  # JOB 2: Example of checking a larger runner.
+  larger-runner:
+    # This is a placeholder, NOT a real runner label.
+    # Replace it with the actual label configured for your organization.
+    runs-on: YOUR-LARGER-RUNNER-LABEL
+
+    steps:
+      - name: Inspect Larger Runner
+        run: |
+          # Print a heading for the larger runner's output.
+          echo "Larger GitHub-hosted runner"
+
+          # Show the number of CPU processing units available.
+          nproc
+
+          # Show memory (RAM) usage and available memory.
+          free -h
+
+          # Show disk space for the root filesystem.
+          df -h /

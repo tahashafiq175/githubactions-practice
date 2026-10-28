@@ -1,0 +1,69 @@
+# Name of the workflow
+name: Deploy Application
+
+# Run this workflow manually
+on:
+  workflow_dispatch:
+    # Ask the user to select an environment
+    inputs:
+      environment:
+        description: "Select deployment environment"
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+      # Ask the user to enter a Docker image version
+      version:
+        description: "Docker image version"
+        required: true
+        type: string
+
+      # Ask the user whether to run tests
+      run_tests:
+        description: "Run tests before deployment?"
+        required: true
+        type: boolean
+
+jobs:
+  test:
+    # Use an Ubuntu runner
+    runs-on: ubuntu-latest
+
+    # Run this job only if the user selects true
+    if: ${{ inputs.run_tests }}
+
+    steps:
+      - name: Run tests
+        # Print a message to show that tests are running
+        run: echo "Running tests..."
+
+  deploy:
+    # Use an Ubuntu runner
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deployment information
+        # Print the selected environment and version
+        run: |
+          echo "Application deployment"
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Version: ${{ inputs.version }}"
+
+      - name: Deploy
+        # Print which version will be deployed and where
+        run: |
+          echo "Deploying version ${{ inputs.version }}"
+          echo "To ${{ inputs.environment }}"
+
+# Simple explanation:
+# 1. The user manually starts the workflow and provides three inputs.
+# 2. The user selects an environment, enters a version, and chooses whether to run tests.
+# 3. If run_tests is true, the test job runs.
+# 4. If run_tests is false, the test job is skipped.
+# 5. The deploy job runs either way and prints the selected environment and version.
+#
+# Note: This is only a demonstration. It prints messages; it does not actually
+# run tests or deploy an application.

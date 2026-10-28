@@ -1,0 +1,27 @@
+name: Program 1 - Environment Variables
+
+# This workflow will run only when we manually trigger it from GitHub.
+on: workflow_dispatch
+
+# These are environment variables defined at the workflow level.
+# Workflow-level variables are available to all jobs and steps in this workflow.
+env:
+  APP_NAME: NetRescue
+  JAVA_VERSION: '21'
+
+jobs:
+  demo:
+    # GitHub will provide an Ubuntu virtual machine to run this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print variables
+        # The run keyword tells GitHub Actions to execute shell commands.
+        run: |
+          # $APP_NAME reads the value stored in the APP_NAME environment variable.
+          # Its value is NetRescue, so the output will be: Application: NetRescue
+          echo "Application: $APP_NAME"
+
+          # $JAVA_VERSION reads the value stored in the JAVA_VERSION environment variable.
+          # Its value is 21, so the output will be: Java Version: 21
+          echo "Java Version: $JAVA_VERSION"

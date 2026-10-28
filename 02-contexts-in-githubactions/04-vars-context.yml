@@ -1,0 +1,42 @@
+
+# The name displayed in the GitHub Actions tab
+name: "04-Understanding-Vars-Context"
+
+# Run this workflow whenever a push event occurs.
+on: push
+
+jobs:
+  variables-info:
+
+    # GitHub provides an Ubuntu runner to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Print Configuration Variables"
+
+        # The vars context provides access to configuration variables
+        # that you define in GitHub repository, organization, or environment settings.
+        #
+        # Unlike the github context, which provides GitHub-generated information,
+        # the vars context provides values that you configure yourself.
+        #
+        # We access these values using the expression syntax: ${{ ... }}
+
+        run: |
+          # vars.APP_NAME
+          # Reads the configuration variable named APP_NAME.
+          #
+          # Before running this workflow, create APP_NAME under:
+          # Repository Settings → Secrets and variables → Actions → Variables.
+          #
+          # For example, if APP_NAME has the value "NetRescue",
+          # GitHub evaluates this expression to "NetRescue".
+          echo "Application Name: ${{ vars.APP_NAME }}"
+
+          # github.repository
+          # Reads the repository name in owner/repository format.
+          #
+          # This value is provided automatically by GitHub.
+          # You do not need to create or configure this variable.
+          # Example: tahashafiq175/githubactions-practice
+          echo "Repository: ${{ github.repository }}"

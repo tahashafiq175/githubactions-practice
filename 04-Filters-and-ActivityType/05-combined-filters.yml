@@ -1,0 +1,31 @@
+
+name: "05 - Combined Filters and Activity Types"
+
+on:
+  pull_request:
+    # Filter 1: the pull request must target main.
+    branches:
+      - main
+
+    # Filter 2: relevant application files must change.
+    paths:
+      - 'CICDDEMO/**'
+
+    # Activity types: only these pull request actions qualify.
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  explain-combined-rules:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Explain the Trigger
+        run: |
+          echo "The pull request matched the configured rules."
+          echo "Activity: ${{ github.event.action }}"
+          echo "Target branch: ${{ github.base_ref }}"
+          echo "Source branch: ${{ github.head_ref }}"
+          echo "Pull request number: ${{ github.event.pull_request.number }}"

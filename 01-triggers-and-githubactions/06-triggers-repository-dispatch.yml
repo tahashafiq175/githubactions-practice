@@ -1,0 +1,40 @@
+name: "04 - External and Cross Workflow Events"
+
+# This workflow can be triggered in TWO ways:
+# 1. An external system sends a custom event to GitHub.
+# 2. Another specified workflow finishes running.
+on:
+  repository_dispatch:
+    # Only respond to repository_dispatch events with this event type.
+    types:
+      - custom-event
+
+  workflow_run:
+    # Watch for a workflow with this exact name.
+    workflows:
+      - "01 - Push and Pull Request Events"
+
+    # Trigger when that workflow has completed, whether it succeeded or failed.
+    types:
+      - completed
+
+jobs:
+  trigger-info:
+    # GitHub provides an Ubuntu virtual machine to run this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Display Trigger Information"
+
+        # Read GitHub Actions context values and make them
+        # available to the shell as environment variables.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          COMMIT_SHA: ${{ github.sha }}
+          GIT_REF: ${{ github.ref }}
+
+        # The shell reads these environment variables and prints their values.
+        run: |
+          echo "Event Name: $EVENT_NAME"
+          echo "Commit SHA: $COMMIT_SHA"
+          echo "Git Ref: $GIT_REF"

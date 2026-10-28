@@ -1,0 +1,23 @@
+
+name: "03 - Pull Request Activity Types"
+
+on:
+  pull_request:
+    # These are activity types, not branch names.
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+
+jobs:
+  explain-pr-activity:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Display Pull Request Event
+        run: |
+          echo "A selected pull request activity triggered this workflow."
+          echo "Activity: ${{ github.event.action }}"
+          echo "Pull request number: ${{ github.event.pull_request.number }}"
+          echo "Target branch: ${{ github.base_ref }}"
+

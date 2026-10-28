@@ -1,0 +1,43 @@
+# Name of the workflow
+name: "First Workflow for Matrix Strategy"
+
+# Run this workflow whenever code is pushed
+on: push
+
+jobs:
+  test:
+    # Use an Ubuntu runner for each matrix combination
+    runs-on: ubuntu-latest
+
+    # Run the same job multiple times with different Java versions
+    strategy:
+      matrix:
+        # GitHub creates a separate job for Java 21, 25, and 26
+        java: [21, 25, 26]
+
+    steps:
+      # Step 1: Download the repository's code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Install the Java version for this matrix job
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          # Each job gets its Java version from the matrix
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+
+      # Step 3: Give the Maven Wrapper permission to run
+      - name: Give Maven Wrapper Permission
+        run: chmod +x CICDDEMO/mvnw
+
+      # Step 4: Build the Spring Boot application
+      - name: Build Spring Boot Application
+        run: |
+          # Move into the project directory
+          cd CICDDEMO
+
+          # Clean previous build files and package the application
+          # -DskipTests skips running tests during this build
+          ./mvnw clean package -DskipTests

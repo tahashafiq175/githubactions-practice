@@ -1,0 +1,60 @@
+# Name of the workflow
+name: "Third Custom Action Workflow with Multiple Inputs"
+
+# Run this workflow manually from GitHub Actions
+on:
+  workflow_dispatch:
+    # Ask the user to enter a Java version
+    inputs:
+      java-version:
+        description: "Please enter Java version"
+
+        # The user can leave this input empty
+        required: false
+
+        # The input accepts text, such as 21
+        type: string
+
+      # Ask the user to enter a Maven version
+      maven-version:
+        description: "Please enter Maven version"
+
+        # The user can leave this input empty
+        required: false
+
+        # The input accepts text, such as 3.9.4
+        type: string
+
+jobs:
+  custom-action-job:
+    # Run this job on an Ubuntu machine provided by GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository files to the runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Run our custom action
+      - name: Run Custom Action
+        uses: ./.github/actions/hello-world
+
+        # These lines are commented out, so they do not run.
+        # If enabled, they would pass values to the custom action.
+        # with:
+        #   java-version: "21"
+        #   maven-version: "3.9.4"
+
+# Purpose of this workflow:
+# 1. The user manually starts the workflow.
+# 2. GitHub asks for a Java version and a Maven version.
+# 3. Both inputs are optional, so the user can leave them empty.
+# 4. The workflow checks out the repository and runs the custom action.
+# 5. Currently, the input values are NOT passed to the custom action,
+#    because the with section is commented out.
+#
+# Important:
+# Defining inputs under workflow_dispatch only collects values from the user.
+# To pass those values to the custom action, use with and reference them
+# with expressions such as ${{ inputs.java-version }}.
+# The custom action must also define matching inputs in its action.yml file.

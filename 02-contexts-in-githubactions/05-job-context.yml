@@ -1,0 +1,37 @@
+
+# The name displayed in the GitHub Actions tab
+name: "05-Understanding-Job-Context"
+
+# Run this workflow whenever a push event occurs.
+on: push
+
+jobs:
+  inspect-job:
+
+    # GitHub provides an Ubuntu runner to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Print Job Information"
+        run: |
+          # job.status
+          # Reads the current status of this job.
+          #
+          # Possible values are:
+          # success  -> The job has completed successfully so far.
+          # failure  -> The job has failed.
+          # cancelled -> The job was cancelled.
+          #
+          # At this point, no previous step has failed,
+          # so this will normally print "success".
+          echo "Job Status: ${{ job.status }}"
+
+          # runner.os
+          # Reads the operating system of the runner executing this job.
+          #
+          # Because runs-on is set to ubuntu-latest,
+          # this will normally print "Linux".
+          #
+          # Other possible values include "Windows" and "macOS",
+          # depending on the runner selected for the job.
+          echo "Runner OS: ${{ runner.os }}"

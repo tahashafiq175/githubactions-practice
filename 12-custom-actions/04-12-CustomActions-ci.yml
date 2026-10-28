@@ -1,0 +1,48 @@
+# Name of the workflow
+name: "Fourth Custom Action Workflow Without Predefined Actions"
+
+# Run this workflow manually
+on:
+  workflow_dispatch:
+    # Ask the user to enter a Java version
+    inputs:
+      java-version:
+        description: "Please enter Java version"
+        required: false
+        type: string
+
+      # Ask the user to enter a Maven version
+      maven-version:
+        description: "Please enter Maven version"
+        required: false
+        type: string
+
+jobs:
+  custom-action-job:
+    # Run the job on an Ubuntu machine
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository files to the runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Run our own custom action
+      - name: Run Custom Action
+        uses: ./.github/actions/hello-world
+
+        # Pass the versions entered by the user to the custom action
+        with:
+          java-version: ${{ inputs.java-version }}
+          mvn-version: ${{ inputs.maven-version }}
+
+# Purpose of this workflow:
+# 1. The user manually starts the workflow.
+# 2. GitHub asks for Java and Maven versions.
+# 3. The checkout step downloads the repository files.
+# 4. The with keyword passes the entered values to our custom action.
+# 5. The custom action can use these values to perform its tasks.
+#
+# Important:
+# The custom action must define matching inputs in its action.yml file.
+# Passing a version does not install Java or Maven automatically.

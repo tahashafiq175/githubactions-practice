@@ -1,0 +1,26 @@
+# A workflow is an automated process defined in a YAML file under .github/workflows.
+# GitHub Actions starts this workflow whenever a push event occurs in the repository.
+name: My First Workflow
+on: push
+
+# Jobs are the top-level units of work in a workflow. Since neither job depends on
+# the other, GitHub Actions can run them in parallel, each on its own runner.
+jobs:
+  job-1:
+    # Use a fresh virtual machine hosted by GitHub with Ubuntu installed.
+    runs-on: ubuntu-latest
+    # Steps within a job run in order on that job's runner.
+    steps:
+      - name: Step 1
+        # The run key executes a shell command; its output appears in the job log.
+        run: echo "Hello, World!"
+      - name: Step 2
+        # This command runs after Step 1 because steps in a job execute sequentially.
+        run: echo "Hello, World! From Step 2"
+  job-2:
+    # This job also gets its own fresh Ubuntu runner, separate from job-1.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1
+        # Print a message as the final step in job-2.
+        run: echo "Hello, World! final step - job -2"

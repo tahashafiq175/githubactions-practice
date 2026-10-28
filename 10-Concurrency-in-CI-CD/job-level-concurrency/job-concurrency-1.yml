@@ -1,0 +1,63 @@
+
+# This is the workflow's display name in GitHub Actions.
+name: "Job Concurrency 1 - Basic"
+
+# This workflow can be started manually
+# from the Actions tab using the Run workflow button.
+on:
+  workflow_dispatch:
+
+# The jobs section contains the jobs this workflow will execute.
+jobs:
+
+  # "deploy" is the unique ID of this job.
+  deploy:
+
+    # GitHub creates an Ubuntu virtual machine
+    # to execute this job's steps.
+    runs-on: ubuntu-latest
+
+    # JOB-LEVEL CONCURRENCY:
+    # This setting applies to the deploy job,
+    # not automatically to every job in a workflow.
+    concurrency:
+
+      # This is the concurrency group name.
+      #
+      # Think of it as a named lane.
+      # Jobs that use the same group name compete
+      # for the same concurrency slots.
+      #
+      # Other workflow files can use this exact same name
+      # to coordinate their deployment jobs with this one.
+      group: production-deployment
+
+      # TRUE means that a newly arriving competing job
+      # can cancel the currently running job in this group.
+      #
+      # Example:
+      # 1. Deploy A starts running.
+      # 2. Deploy B starts and uses the same group.
+      # 3. Deploy B can cancel Deploy A.
+      #
+      # Cancellation stops the job, but does not undo
+      # changes that the job has already made.
+      cancel-in-progress: true
+
+    # Steps are the individual instructions executed by the job.
+    steps:
+
+      # First step: print a message in the workflow logs.
+      - name: Start deployment
+        run: |
+          echo "Deployment started"
+
+          # Keep the job running for 60 seconds.
+          # This gives us time to start another run
+          # and observe the concurrency behavior.
+          sleep 60
+
+          # This message appears only if execution reaches
+          # this command. If the job is cancelled during sleep,
+          # this message will normally not appear.
+          echo "Deployment finished"

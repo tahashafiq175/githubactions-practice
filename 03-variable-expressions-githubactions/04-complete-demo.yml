@@ -1,0 +1,60 @@
+name: Program 4 - Complete Variables Demo
+
+# This workflow runs when we manually trigger it from GitHub.
+on: workflow_dispatch
+
+# WORKFLOW-LEVEL ENVIRONMENT VARIABLES
+# These variables are available to every job and step in this workflow,
+# unless a more specific environment variable overrides them.
+env:
+  APP_NAME: NetRescue
+  JAVA_VERSION: '21'
+
+jobs:
+  build:
+    # GitHub provides an Ubuntu virtual machine to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show information
+
+        # STEP-LEVEL ENVIRONMENT VARIABLE
+        # ENVIRONMENT is available only to this step.
+        # It is not automatically available to other steps.
+        env:
+          ENVIRONMENT: development
+
+        # The run keyword executes the commands in the runner's shell.
+        run: |
+          # SECTION 1: APPLICATION INFORMATION
+          # $APP_NAME and $JAVA_VERSION are shell variables.
+          # The shell reads their values from the environment.
+          # $ENVIRONMENT reads the variable defined specifically for this step.
+          echo "========== APPLICATION =========="
+          echo "App: $APP_NAME"
+          echo "Java: $JAVA_VERSION"
+          echo "Environment: $ENVIRONMENT"
+
+          # Prints an empty line to separate the sections.
+          echo ""
+          echo "========== GITHUB INFORMATION =========="
+
+          # GitHub Actions evaluates these expressions before shell execution.
+          # github.actor gives the username of the person who triggered the workflow.
+          echo "Actor: ${{ github.actor }}"
+
+          # github.repository gives the repository name in OWNER/REPOSITORY format.
+          echo "Repository: ${{ github.repository }}"
+
+          # github.event_name identifies the event that triggered the workflow.
+          # Because we use workflow_dispatch, its value is workflow_dispatch.
+          echo "Event: ${{ github.event_name }}"
+
+          # Prints another empty line to separate the sections.
+          echo ""
+          echo "========== COMBINED INFORMATION =========="
+
+          # GitHub Actions first replaces ${{ github.repository }} with the repository name.
+          # The shell then expands $APP_NAME using the environment variable's value.
+          # Both mechanisms contribute to the final output of this command.
+          echo "${{ github.repository }} is running $APP_NAME"

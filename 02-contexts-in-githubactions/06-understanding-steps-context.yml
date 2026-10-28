@@ -1,0 +1,39 @@
+
+# The name displayed in the GitHub Actions tab
+name: "06-Understanding-Steps-Context"
+
+# Run this workflow whenever a push event occurs.
+on: push
+
+jobs:
+  steps-info:
+
+    # GitHub provides an Ubuntu runner to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Create an Output"
+
+        # The id gives this step a unique identifier within the job.
+        # Another step can use this id to access this step's outputs.
+        id: app-info
+
+        # GITHUB_OUTPUT is a special file provided by GitHub Actions.
+        # Writing a name=value pair to this file creates a step output.
+        #
+        # Here, we create an output named "app_name"
+        # and give it the value "NetRescue".
+        run: echo "app_name=NetRescue" >> "$GITHUB_OUTPUT"
+
+      - name: "Read the Previous Step Output"
+
+        # The steps context lets us access information about steps
+        # that have already run in the current job.
+        #
+        # steps.app-info identifies the earlier step using its id.
+        # outputs.app_name accesses the output created by that step.
+        #
+        # GitHub evaluates this expression and substitutes "NetRescue"
+        # before the shell executes the command.
+        run: |
+          echo "Application Name: ${{ steps.app-info.outputs.app_name }}"

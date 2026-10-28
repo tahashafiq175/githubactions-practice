@@ -1,0 +1,69 @@
+
+# The workflow's display name.
+name: "Job Concurrency 2 - Independent Jobs"
+
+# Start this workflow manually from GitHub Actions.
+on:
+  workflow_dispatch:
+
+# Define two jobs: build and deploy.
+jobs:
+
+  # JOB 1: Build the application.
+  build:
+    # Run the build job on an Ubuntu virtual machine.
+    runs-on: ubuntu-latest
+
+    # There is NO concurrency setting inside this job.
+    #
+    # Therefore, this build job is not directly controlled
+    # by the production-deployment concurrency group below.
+    #
+    # It can run alongside other eligible jobs,
+    # subject to runner availability and other workflow rules.
+    steps:
+      - name: Build application
+        run: |
+          echo "Build started"
+
+          # Simulate a build that takes 60 seconds.
+          sleep 60
+
+          echo "Build finished"
+
+  # JOB 2: Deploy the application.
+  deploy:
+    # Run the deployment job on an Ubuntu virtual machine.
+    runs-on: ubuntu-latest
+
+    # JOB-LEVEL CONCURRENCY:
+    # This setting applies specifically to this deploy job.
+    concurrency:
+
+      # Use the same group name as the first workflow.
+      #
+      # This means deploy jobs in both workflow files
+      # can compete with each other.
+      group: production-deployment
+
+      # FALSE means a newly arriving competing deploy job
+      # does NOT automatically cancel the running deploy job.
+      #
+      # The current deployment can continue.
+      # A competing deployment may wait as the pending job.
+      #
+      # Remember: GitHub allows at most one running job
+      # and one pending job in this concurrency group.
+      # A newer pending job can replace an older pending job.
+      cancel-in-progress: false
+
+    steps:
+      - name: Deploy application
+        run: |
+          echo "Deployment started"
+
+          # Simulate a deployment that takes 90 seconds.
+          # Use this delay to test concurrency.
+          sleep 90
+
+          echo "Deployment finished"

@@ -1,0 +1,33 @@
+# Name of the reusable workflow
+name: "Reusable Workflow to Demonstrate Its Purpose"
+
+# Allow another workflow to call this workflow
+on:
+  workflow_call:
+    # Define the input that the caller must provide
+    inputs:
+      environment:
+        # Explain what value the caller should send
+        description: "Please Choose Your Environment"
+
+        # The caller must provide this input
+        required: true
+
+        # The input accepts text, such as development or production
+        type: string
+
+jobs:
+  Reusable-Workflow:
+    # Run this job on an Ubuntu machine
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checking the Environment Value
+        # Print the environment value received from the caller workflow
+        run: echo "You have selected ${{ inputs.environment }} for the environment input."
+
+# Purpose of this workflow:
+# 1. This workflow is designed to be called by another workflow.
+# 2. The caller sends an environment value, such as production.
+# 3. The reusable workflow receives that value through its inputs.
+# 4. The step prints the received value.

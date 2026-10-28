@@ -1,0 +1,61 @@
+# Name of the GitHub Actions workflow
+name: "Understanding String-to-Integer Conversion in GitHub Actions"
+
+# Run this workflow whenever code is pushed to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # Create a job to demonstrate output values and type conversion
+  output-producer:
+    # GitHub provides an Ubuntu virtual machine to run this job
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Create an output value
+      - name: Set Output
+        # Give this step an ID so later steps can access its output
+        id: set-output
+
+        # Save the value 10 as a step output
+        # Important: GitHub Actions step outputs are strings, even when they look like numbers
+        run: echo "producer=10" >> "$GITHUB_OUTPUT"
+
+      # Step 2: Read the string output and use it in arithmetic
+      - name: Convert String to Integer
+        # Give this step an ID so we can access its outputs later
+        id: convert-output
+
+        run: |
+          # Read and print the output created by Step 1
+          # GitHub substitutes the expression with the output value
+          echo "${{ steps.set-output.outputs.producer }}"
+
+          # Save the original output under another output name
+          # This value is still a string: "10"
+          echo "producer_string=${{ steps.set-output.outputs.producer }}" >> "$GITHUB_OUTPUT"
+
+          # Bash arithmetic evaluates the value as a number
+          # 10 + 10 = 20
+          producer_integer=$(( ${{ steps.set-output.outputs.producer }} + 10 ))
+
+          # Print the calculated result
+          echo "Integer result: $producer_integer"
+
+          # Save the calculated result as another step output
+          # Note: this output will also be stored as a string
+          echo "producer_integer=$producer_integer" >> "$GITHUB_OUTPUT"
+
+      # Step 3: Convert a numeric string using fromJSON()
+      - name: Using fromJSON()
+        id: form-json
+
+        run: |
+          # The step output producer_string contains the string "10"
+          # fromJSON() interprets the JSON number 10 as a number, not a string
+          producer_integer=${{ fromJSON(steps.convert-output.outputs.producer_string) }}
+
+          # Print the converted value
+          echo "Value converted using fromJSON: $producer_integer"

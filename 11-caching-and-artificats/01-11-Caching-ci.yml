@@ -1,0 +1,125 @@
+
+# Workflow name displayed in the GitHub Actions tab
+name: "01 - Spring Boot Maven Caching Demo"
+
+# This workflow starts only when you manually run it
+# from the GitHub Actions tab.
+on:
+  workflow_dispatch:
+
+jobs:
+
+  # JOB 1: Build the Spring Boot application.
+  build-job:
+    # GitHub provides a fresh Ubuntu runner for this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Download your repository files onto the runner.
+      # This includes CICDDEMO/pom.xml, mvnw, source code, and Docker files.
+      - name: CheckOutRepository
+        uses: actions/checkout@v5
+
+      # Step 2: Install/configure Java 21 on this runner.
+      # Temurin is a distribution of OpenJDK.
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Step 3: Restore the Maven dependency cache.
+      - name: Restore Maven Cache
+        id: maven-cache
+
+        # This action looks for a previously saved cache matching the key.
+        uses: actions/cache@v4
+        with:
+          # Maven normally stores downloaded dependencies here.
+          # Examples include Spring Boot libraries and other JAR files.
+          path: ~/.m2/repository
+
+          # Construct a cache key from:
+          # 1. The word "maven"
+          # 2. The runner operating system
+          # 3. A hash of the project's pom.xml
+          #
+          # If the OS and pom.xml hash match an existing cache key,
+          # GitHub can restore that cache.
+          key: maven-${{ runner.os }}-${{ hashFiles('CICDDEMO/pom.xml') }}
+
+      # Step 4: Check whether an exact cache key was found.
+      - name: Display Cache Status
+        run: |
+          echo "Cache Hit: ${{ steps.maven-cache.outputs.cache-hit }}"
+
+          # true  = An exact cache key was restored.
+          # false = No exact cache key was found.
+          #
+          # Because this workflow has no restore-keys setting,
+          # it does not request fallback cache keys.
+
+      # Step 5: Make the Maven Wrapper executable on Linux.
+      # Git checkouts may not preserve executable permissions
+      # as expected in every repository setup.
+      - name: Give Maven Wrapper Permission
+        run: chmod +x CICDDEMO/mvnw
+
+      # Step 6: Build the Spring Boot application.
+      - name: Build Spring Boot Application
+        run: |
+          cd CICDDEMO
+
+          # clean removes previous build output.
+          # package compiles the project and packages the application.
+          # -DskipTests skips test execution.
+          #
+          # Maven can reuse dependencies restored from the cache.
+          ./mvnw clean package -DskipTests
+
+
+  # JOB 2: Runs after build-job succeeds.
+  test-job:
+    runs-on: ubuntu-latest
+
+    # This job waits for build-job to finish successfully.
+    needs:
+      - build-job
+
+    steps:
+      # Every job gets its own fresh runner.
+      # Therefore, this job must check out the repository again.
+      - name: CheckOutRepository
+        uses: actions/checkout@v5
+
+      # Configure Java again because this is a separate runner.
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Restore the same Maven cache used by build-job.
+      - name: Restore Maven Cache
+        id: maven-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+
+          # The same OS and pom.xml hash produce the same cache key.
+          key: maven-${{ runner.os }}-${{ hashFiles('CICDDEMO/pom.xml') }}
+
+      # Check whether this runner found the exact cache.
+      - name: Display Cache Status
+        run: |
+          echo "Cache Hit: ${{ steps.maven-cache.outputs.cache-hit }}"
+
+      # Make the wrapper executable on this runner too.
+      - name: Give Maven Wrapper Permission
+        run: chmod +x CICDDEMO/mvnw
+
+      # Build the application again.
+      - name: Build Spring Boot Application
+        run: |
+          cd CICDDEMO
+          ./mvnw clean package -DskipTests

@@ -1,0 +1,62 @@
+
+# This is the name of the second workflow.
+name: "GitHub Actions Concurrency Demo"
+
+# Define when this workflow should run.
+on:
+
+  # Run when a commit is pushed to the main branch.
+  push:
+    branches:
+      - main
+
+  # Allow manual execution from the Actions tab.
+  workflow_dispatch:
+
+# This setting applies to the ENTIRE workflow run,
+# not just an individual job.
+concurrency:
+
+  # This is exactly the same group name as in File 1.
+  #
+  # Therefore, this workflow and File 1 share
+  # the same concurrency group.
+  group: concurrency-demo
+
+  # FALSE means a new competing run will NOT
+  # automatically cancel the currently running run.
+  #
+  # The new run can wait as a pending run instead.
+  # However, GitHub allows only one pending run per group.
+  # A newer pending run can replace an older pending run.
+  cancel-in-progress: false
+
+# Define the jobs that this workflow should execute.
+jobs:
+
+  # This is the job ID.
+  concurrency-demo-job:
+
+    # Use an Ubuntu virtual machine to run this job.
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # STEP 1: Display details about the current run.
+      - name: "start workflow"
+        run: |
+          echo "workflow started"
+
+          # Print the unique ID of this workflow run.
+          echo "RUN ID : ${{ github.run_id }}"
+
+          # Print the commit SHA associated with this run.
+          echo "COMMIT SHA: ${{ github.sha }}"
+
+      # STEP 2: Simulate a task that takes two minutes.
+      - name: "Simulate a long-running task"
+        run: |
+          echo "long-running task started"
+
+          # Sleep for 120 seconds to make concurrency observable.
+          sleep 120

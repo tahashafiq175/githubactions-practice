@@ -1,0 +1,39 @@
+# Name of the workflow
+name: "Delimiter and Outputs Relationship"
+
+# Run this workflow whenever code is pushed
+on:
+  push:
+
+jobs:
+  # Create a job to demonstrate delimiters
+  Delimiter-Demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Store multiple lines in one output
+      - name: "Delimiter Demo"
+        id: Delimiter
+        run: |
+          # Generate a random delimiter to mark the end of the message
+          DELIMITER=$(openssl rand -hex 16)
+
+          # Write the multiline output to GitHub's output file
+          {
+            # Start an output named "message"
+            echo "message<<$DELIMITER"
+
+            # These lines are the message's content
+            echo "Hello How are you"
+            echo "I am Fine"
+            echo "and whats about you"
+
+            # Mark the end of the message using the same delimiter
+            echo "$DELIMITER"
+          } >> "$GITHUB_OUTPUT"
+
+      # Step 2: Read and print the output from Step 1
+      - name: "Consuming the Output"
+        run: |
+          # Get the output named "message" from the step with ID "Delimiter"
+          echo "${{ steps.Delimiter.outputs.message }}"

@@ -1,0 +1,35 @@
+# The name of our GitHub Actions workflow
+name: "First Output Workflow to Demonstrate the Purpose of Output"
+
+# Run this workflow whenever code is pushed to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # Create a job named output-workflow
+  output-workflow:
+    # GitHub will provide an Ubuntu virtual machine to run this job
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Create an output value
+      - name: Set Output Value
+        # Give this step an ID so we can access its output in later steps
+        id: set-output
+
+        # Write a key-value pair into GitHub's special output file
+        # output is the name of the output
+        # The text after = is the value we want to save
+        # $GITHUB_OUTPUT allows GitHub Actions to recognize this value as a step output
+        run: echo "output=Hello from step 1 of first job of first workflow" >> $GITHUB_OUTPUT
+
+      # Step 2: Read and print the output created by Step 1
+      - name: Print Output Value
+
+        # Use the steps context to access another step's output
+        # set-output is the ID of Step 1
+        # outputs.output means: get the output named "output" from that step
+        # GitHub evaluates this expression before running the command
+        run: 'echo "The Output Value is: ${{ steps.set-output.outputs.output }}"'

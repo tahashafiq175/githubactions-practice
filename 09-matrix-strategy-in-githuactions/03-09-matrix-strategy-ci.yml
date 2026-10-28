@@ -1,0 +1,62 @@
+# Name of the workflow
+name: "Third Workflow to Demonstrate Include"
+
+# Run the workflow whenever code is pushed
+on: push
+
+jobs:
+  include-demonstration:
+    strategy:
+      matrix:
+        # Operating systems to use
+        os: [ubuntu-latest, windows-latest]
+
+        # Java versions to use
+        java: [21, 25, 26]
+
+        # Add extra information to a matching combination
+        include:
+          - os: ubuntu-latest
+            java: 26
+            # Add this extra value to the Ubuntu + Java 26 combination
+            environment: production
+
+    # Select the operating system for each matrix combination
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Step 1: Display the values for the current matrix combination
+      - name: Display Matrix Information
+        run: |
+          echo "Operating System: ${{ matrix.os }}"
+          echo "Java Version: ${{ matrix.java }}"
+          echo "Environment: ${{ matrix.environment }}"
+
+      # Step 2: Download the repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 3: Install the selected Java version
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+
+      # Step 4: Give the Maven Wrapper permission on Ubuntu
+      # The chmod command is not suitable for the default Windows shell
+      - name: Give Maven Wrapper Permission
+        if: runner.os == 'Linux'
+        run: chmod +x CICDDEMO/mvnw
+
+      # Step 5: Build the Spring Boot application
+      - name: Build Spring Boot Application
+        working-directory: CICDDEMO
+        shell: bash
+        # Use the correct Maven Wrapper command for each operating system
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            ./mvnw.cmd clean package -DskipTests
+          else
+            ./mvnw clean package -DskipTests
+          fi

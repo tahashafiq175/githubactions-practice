@@ -1,0 +1,36 @@
+name: "02 - Branch Filtering"
+
+# This workflow runs only when a push happens on the main branch.
+# Pushes to other branches, such as feature/login or development,
+# will not trigger this workflow.
+on:
+  push:
+    # The branches filter tells GitHub which branches should trigger this workflow.
+    branches:
+      - main
+
+jobs:
+  branch-info:
+    # GitHub provides an Ubuntu virtual machine to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Print Branch Information"
+        # The run keyword tells GitHub Actions to execute these shell commands.
+        run: |
+          # EVENT NAME
+          # github.event_name tells us which event triggered the workflow.
+          # Because this workflow is triggered by a push, the value will be "push".
+          echo "Event: ${{ github.event_name }}"
+
+          # GIT REF
+          # github.ref identifies the branch or tag reference associated with the event.
+          # Since this workflow accepts pushes only to main,
+          # the value will normally be refs/heads/main.
+          echo "Ref: ${{ github.ref }}"
+
+          # COMMIT SHA
+          # github.sha provides the commit SHA associated with this workflow run.
+          # A SHA is a unique identifier for a Git commit.
+          # For a push event, it generally identifies the tip commit of the pushed ref.
+          echo "SHA: ${{ github.sha }}"

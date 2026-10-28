@@ -1,0 +1,29 @@
+# Name of the workflow
+name: "First Custom Action Workflow"
+
+# Run this workflow whenever code is pushed to the repository
+on:
+  push
+
+jobs:
+  custom-action-job:
+    # Run this job on an Ubuntu machine provided by GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository files to the runner
+      # This allows the runner to access our custom action
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Run our own custom action
+      # The path points to the folder containing the custom action
+      - name: Run Custom Action
+        uses: ./.github/actions/hello-world
+
+# Purpose of this workflow:
+# 1. Whenever code is pushed, GitHub starts this workflow.
+# 2. GitHub provides an Ubuntu runner to execute the job.
+# 3. The checkout step downloads the repository files to the runner.
+# 4. The uses keyword runs our custom action from the specified folder.
+# 5. The custom action performs the tasks defined in its own action.yml file.

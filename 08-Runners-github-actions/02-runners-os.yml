@@ -1,0 +1,55 @@
+# The name displayed for this workflow in GitHub Actions.
+name: "02 - Runner Operating Systems"
+
+# Start the workflow only when someone manually runs it.
+on:
+  workflow_dispatch:
+
+jobs:
+  # JOB 1: Runs on an Ubuntu Linux environment.
+  ubuntu-job:
+    # Ask GitHub to provide an Ubuntu runner.
+    runs-on: ubuntu-latest
+
+    steps:
+      # A readable name for this step in the workflow logs.
+      - name: Identify Ubuntu Runner
+        run: |
+          # Print a message so we know this job is running.
+          echo "I am running on Ubuntu"
+
+          # Display detailed system information.
+          # uname -a usually shows the OS kernel, version,
+          # machine architecture, and other system details.
+          uname -a
+
+  # JOB 2: Runs on a Windows environment.
+  windows-job:
+    # Ask GitHub to provide a Windows runner.
+    runs-on: windows-latest
+
+    steps:
+      - name: Identify Windows Runner
+        run: |
+          # Print a message so we know this job is running.
+          echo "I am running on Windows"
+
+          # Display detailed Windows system information,
+          # such as the OS version, system type, and hardware details.
+          # PowerShell is the default shell on Windows runners.
+          systeminfo
+
+  # JOB 3: Runs on a macOS environment.
+  macos-job:
+    # Ask GitHub to provide a macOS runner.
+    runs-on: macos-latest
+
+    steps:
+      - name: Identify macOS Runner
+        run: |
+          # Print a message so we know this job is running.
+          echo "I am running on macOS"
+
+          # Display macOS product name, version, and build information.
+          sw_vers
+          

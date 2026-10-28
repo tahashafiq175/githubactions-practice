@@ -1,0 +1,21 @@
+
+name: "01 - Branch Filters"
+
+# "push" means someone pushed commits to the repository.
+on:
+  push:
+    # Only allow pushes to these branches.
+    branches:
+      - main
+      - 'feature/**'
+
+jobs:
+  explain-branch-filter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show What Triggered the Workflow
+        run: |
+          echo "A matching push event triggered this workflow."
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Actor: ${{ github.actor }}"

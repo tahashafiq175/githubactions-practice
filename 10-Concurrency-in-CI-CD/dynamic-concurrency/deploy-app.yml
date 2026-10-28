@@ -1,0 +1,67 @@
+# This is the name displayed in the GitHub Actions tab.
+name: "1 - Deploy Application"
+
+# This workflow can be started manually.
+on:
+  workflow_dispatch:
+    # Ask the user to select an environment before starting.
+    inputs:
+      environment:
+        description: "Choose deployment environment"
+
+        # GitHub displays a dropdown menu.
+        type: choice
+
+        # These are the available dropdown options.
+        options:
+          - development
+          - staging
+          - production
+
+        # The user must select an environment.
+        required: true
+
+        # If the user does not change the selection,
+        # development will be selected by default.
+        default: development
+
+jobs:
+  deploy:
+    # GitHub provides an Ubuntu virtual machine to run this job.
+    runs-on: ubuntu-latest
+
+    # This controls which other jobs can run at the same time
+    # as this deployment.
+    concurrency:
+
+      # GitHub replaces the expression with the selected input.
+      #
+      # If environment = production:
+      # group becomes deploy-production
+      #
+      # If environment = staging:
+      # group becomes deploy-staging
+      group: deploy-${{ inputs.environment }}
+
+      # If another job enters this same group,
+      # do not automatically cancel the running job.
+      cancel-in-progress: false
+
+    steps:
+      # This step helps us see which environment was selected.
+      - name: Show selected environment
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+
+          # Print the group name so we can understand
+          # how the dynamic name is formed.
+          echo "Concurrency group: deploy-${{ inputs.environment }}"
+
+          # Pretend that a deployment is taking place.
+          echo "Deployment started"
+
+          # Keep the job running for 60 seconds
+          # so we have time to test concurrency.
+          sleep 60
+
+          echo "Deployment finished"

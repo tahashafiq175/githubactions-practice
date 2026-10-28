@@ -1,0 +1,78 @@
+# Name of the workflow
+name: 01-03 SpringBoot CI Workflow
+
+# Run this workflow whenever code is pushed to the repository
+on: push
+
+jobs:
+  springboot-ci-job:
+    # GitHub provides an Ubuntu machine to run this job
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository files to the runner
+      - name: CheckOutRepository
+        uses: actions/checkout@v7
+
+      # Install Java 21 so the application can be built
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Give the Maven Wrapper permission to execute on Linux
+      - name: Give Maven Wrapper Permission
+        run: chmod +x CICDDEMO/mvnw
+
+      # Build the Spring Boot application using Maven
+      # clean removes old build files
+      # package compiles the code and creates the application JAR
+      # -DskipTests skips running tests
+      - name: Build Spring Boot Application
+        run: |
+          cd CICDDEMO
+          ./mvnw clean package -DskipTests
+
+      # Build a Docker image containing the Spring Boot application
+      # The Dockerfile inside CICDDEMO defines how to build the image
+      - name: Build Docker Image
+        run: docker build -t githubaction-springboot-app:v1 ./CICDDEMO
+
+      # Start a container from the image
+      # Port 8082 on the runner maps to port 8080 inside the container
+      - name: Run Container
+        run: docker run -d -p 8082:8080 --name githubaction-springboot-container githubaction-springboot-app:v1
+
+      # Check whether the container is running or has stopped
+      - name: Check Container Status
+        run: docker ps -a
+
+      # Check the application's startup logs and send a test HTTP request
+      - name: Smoke Test
+        run: |
+          # Wait 10 seconds for the application to start
+          sleep 10
+
+          # Print the container's logs to help identify problems
+          echo "===== CONTAINER LOGS ====="
+          docker logs githubaction-springboot-container
+
+          # Send an HTTP request to the application's endpoint
+          echo "===== CURL TEST ====="
+          curl -v http://localhost:8082/get/taha
+
+# Overall purpose:
+# 1. Download the source code.
+# 2. Set up Java 21.
+# 3. Build the Spring Boot application into a JAR file.
+# 4. Package the application into a Docker image.
+# 5. Start a container from that image.
+# 6. Check the container and test whether the application responds to an HTTP request.
+#
+# Important:
+# This workflow builds the application but skips Maven tests.
+# The smoke test checks the /get/taha endpoint.
+# If the endpoint returns an unsuccessful HTTP status, curl does not fail
+# on HTTP status codes by default. Use curl --fail to make such responses
+# fail the workflow step.

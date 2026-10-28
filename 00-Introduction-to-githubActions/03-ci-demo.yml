@@ -1,0 +1,41 @@
+
+name: "03 - Simulating the CI/CD Journey"
+
+# We can start this workflow manually.
+on:
+  workflow_dispatch:
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      # CI stage begins.
+      - name: 1 - Start pipeline
+        run: echo "A developer has requested a pipeline run."
+
+      # Simulate checking the code.
+      - name: 2 - Validate code
+        run: echo "CI: Checking the code..."
+
+      # Simulate testing.
+      - name: 3 - Run tests
+        run: echo "CI: Running automated tests..."
+
+      # Simulate creating a deployable build.
+      - name: 4 - Build application
+        run: echo "CI: Building the application..."
+
+      # Simulate creating a Docker image.
+      # No real Docker image is created by this command.
+      - name: 5 - Create image
+        run: echo "Packaging: Imagine creating hotel-service:v1."
+
+      # Simulate the delivery/deployment stage.
+      # No real deployment occurs.
+      - name: 6 - Deploy application
+        run: echo "CD: Imagine deploying the application."
+
+      # Show the final message.
+      - name: 7 - Finish
+        run: echo "The simulated pipeline has finished!"

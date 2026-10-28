@@ -1,0 +1,36 @@
+
+# The name of our workflow.
+# This is the name you will see in the GitHub Actions tab.
+name: "01 - My First CI/CD Workflow"
+
+# "on" tells GitHub WHEN to run this workflow.
+# workflow_dispatch means we can start it manually
+# by clicking the Run workflow button on GitHub.
+on:
+  workflow_dispatch:
+
+# "jobs" contains the work that GitHub must perform.
+jobs:
+
+  # "hello" is the ID we give to this job.
+  # We can choose our own meaningful job ID.
+  hello:
+
+    # GitHub provides a virtual machine to run our commands.
+    # ubuntu-latest means we want an Ubuntu runner.
+    runs-on: ubuntu-latest
+
+    # "steps" contains the individual tasks of this job.
+    steps:
+
+      # A step can execute a shell command.
+      - name: Say hello
+        run: echo "Hello! My CI/CD journey starts today."
+
+      # This is another step in the same job.
+      - name: Explain CI
+        run: echo "CI helps automate building and testing code."
+
+      # This step explains the CD idea.
+      - name: Explain CD
+        run: echo "CD helps prepare and deliver software."

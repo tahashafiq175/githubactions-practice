@@ -1,0 +1,73 @@
+
+# This is the name of the workflow displayed in GitHub Actions.
+name: "Concurrency demo Part 2"
+
+# This section tells GitHub WHEN to start this workflow.
+on:
+
+  # Start the workflow whenever code is pushed
+  # to the main branch.
+  push:
+    branches:
+      - main
+
+  # Also allow us to start the workflow manually
+  # from the GitHub Actions tab.
+  workflow_dispatch:
+
+# This section controls concurrency for the ENTIRE workflow run.
+concurrency:
+
+  # Every workflow run using this exact group name
+  # competes with other runs using the same group.
+  #
+  # The workflow name does not need to match another workflow's name.
+  # The evaluated group name is what matters.
+  group: concurrency-demo
+
+  # TRUE means a new competing run can cancel
+  # the currently running workflow run in this group.
+  #
+  # Example:
+  # Run A starts.
+  # Run B starts and competes with Run A.
+  # GitHub can cancel Run A so Run B can proceed.
+  cancel-in-progress: true
+
+# This section defines the jobs inside the workflow.
+jobs:
+
+  # This is the job ID.
+  # It identifies this job inside the YAML file.
+  Concurrency-Demo-Job-2:
+
+    # GitHub provides an Ubuntu virtual machine
+    # to execute the steps in this job.
+    runs-on: ubuntu-latest
+
+    # Steps execute in order, one after another.
+    steps:
+
+      # STEP 1: Print information about this workflow run.
+      - name: "start workflow"
+        run: |
+          # Print a simple message to the logs.
+          echo "workflow started"
+
+          # Print the unique ID assigned to this workflow run.
+          # Different runs normally have different run IDs.
+          echo "RUN ID : ${{ github.run_id }}"
+
+          # Print the commit SHA associated with this run.
+          # This helps us identify which commit triggered it.
+          echo "COMMIT SHA: ${{ github.sha }}"
+
+      # STEP 2: Simulate a task that takes a long time.
+      - name: "Simulate a long-running task"
+        run: |
+          echo "long-running task started"
+
+          # Keep the job busy for 120 seconds.
+          # This gives us time to trigger another run
+          # and observe what happens.
+          sleep 120

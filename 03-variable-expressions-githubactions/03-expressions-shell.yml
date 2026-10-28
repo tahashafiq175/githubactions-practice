@@ -1,0 +1,30 @@
+name: Program 3 - Expressions vs Shell
+
+# This workflow runs when we manually trigger it from GitHub.
+on: workflow_dispatch
+
+# We define an environment variable at the workflow level.
+# APP_NAME is available to all jobs and steps in this workflow.
+env:
+  APP_NAME: NetRescue
+
+jobs:
+  demo:
+    # GitHub provides an Ubuntu virtual machine to run this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Access variable in two ways
+        # The run keyword tells GitHub Actions to execute these shell commands.
+        run: |
+          # Method 1 - Shell:
+          # $APP_NAME is shell syntax.
+          # The shell reads the value of the APP_NAME environment variable
+          # when this command executes.
+          echo "Method 1 - Shell: $APP_NAME"
+
+          # Method 2 - Expression:
+          # ${{ env.APP_NAME }} is GitHub Actions expression syntax.
+          # GitHub Actions evaluates this expression before the shell executes
+          # the command, replacing it with the value NetRescue.
+          echo "Method 2 - Expression: ${{ env.APP_NAME }}"

@@ -1,0 +1,42 @@
+# The name displayed for this workflow in GitHub Actions.
+name: "01 - Runner Information"
+
+# This workflow starts only when someone manually runs it
+# using the "Run workflow" button in GitHub Actions.
+on:
+  workflow_dispatch:
+
+jobs:
+  runner-info:
+    # Ask GitHub to provide an Ubuntu Linux runner for this job.
+    # The runner is the computer environment that executes our commands.
+    runs-on: ubuntu-latest
+
+    steps:
+      # Give this step a readable name in the workflow logs.
+      - name: Display Runner Details
+
+        # Run these shell commands on the runner.
+        # The | symbol allows us to write multiple commands on separate lines.
+        run: |
+          # Print a simple greeting to confirm that the step is running.
+          echo "Hello from GitHub Actions!"
+
+          # Print the runner's name.
+          # RUNNER_NAME is an environment variable provided by GitHub Actions.
+          echo "Runner Name: $RUNNER_NAME"
+
+          # Print the operating system of the runner, such as Linux.
+          echo "Runner OS: $RUNNER_OS"
+
+          # Print the runner's CPU architecture, such as X64 or ARM64.
+          echo "Runner Architecture: $RUNNER_ARCH"
+
+          # Print the temporary directory used by the runner.
+          # Temporary files can be stored here during workflow execution.
+          echo "Temporary Directory: $RUNNER_TEMP"
+
+          # Print the workspace directory for this job.
+          # This is the directory where repository files are placed
+          # after checkout and where job commands commonly operate.
+          echo "Workspace: $GITHUB_WORKSPACE"

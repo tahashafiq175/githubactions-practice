@@ -1,0 +1,68 @@
+
+# The name displayed in the GitHub Actions tab
+name: "03-Understanding-GitHub-Context-Properties"
+
+# Trigger this workflow whenever a push event occurs.
+on: push
+
+jobs:
+  context-info:
+
+    # GitHub provides an Ubuntu runner to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Print Repository Information"
+
+        # The github context is a collection of predefined information
+        # that GitHub Actions makes available during a workflow run.
+        #
+        # We do not create the github context ourselves.
+        # GitHub automatically provides it.
+        #
+        # The syntax ${{ ... }} is called an expression.
+        # We use expressions to access values from contexts.
+        #
+        # GitHub evaluates these expressions and replaces them
+        # with their actual values before the shell runs the commands.
+
+        run: |
+          # github.repository
+          # Returns the repository name in owner/repository format.
+          # Example: tahashafiq175/githubactions-practice
+          echo "Repository: ${{ github.repository }}"
+
+          # github.repository_owner
+          # Returns the owner of the repository.
+          # Example: tahashafiq175
+          echo "Repository Owner: ${{ github.repository_owner }}"
+
+          # github.actor
+          # Returns the GitHub username of the person who initiated
+          # the workflow run.
+          # Example: tahashafiq175
+          echo "Triggered By: ${{ github.actor }}"
+
+          # github.event_name
+          # Returns the name of the event that triggered this run.
+          # Because this workflow uses "on: push", the value will
+          # normally be "push" for this run.
+          echo "Event Name: ${{ github.event_name }}"
+
+          # github.workflow
+          # Returns the workflow's name as defined by the top-level
+          # "name" property in this YAML file.
+          # Example: 03-Understanding-GitHub-Context-Properties
+          echo "Workflow Name: ${{ github.workflow }}"
+
+          # github.run_number
+          # Returns the sequential run number for this workflow.
+          # It increases for each new run of this workflow in the repository.
+          # Example: 1, 2, 3, 4...
+          echo "Run Number: ${{ github.run_number }}"
+
+          # github.run_id
+          # Returns the unique ID assigned to this workflow run.
+          # It is different from the run number.
+          # It identifies this particular run within the repository.
+          echo "Run ID: ${{ github.run_id }}"

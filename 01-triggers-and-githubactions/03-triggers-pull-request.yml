@@ -1,0 +1,51 @@
+name: "01 - Push and Pull Request Events"
+
+# This workflow can be triggered by TWO different events:
+# 1. A push to the main branch.
+# 2. A pull request targeting the main branch.
+on:
+  push:
+    # Trigger the workflow when commits are pushed to main.
+    branches:
+      - main
+
+  pull_request:
+    # Trigger the workflow when a pull request targets main.
+    # For example, a pull request from feature/login into main.
+    branches:
+      - main
+
+jobs:
+  event-info:
+    # GitHub provides an Ubuntu virtual machine to execute this job.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Display Event Information"
+        # The run keyword tells GitHub Actions to execute these shell commands.
+        run: |
+          # EVENT NAME
+          # github.event_name tells us which event triggered this workflow.
+          # Its value will be "push" for a push event,
+          # or "pull_request" for a pull request event.
+          echo "Event Name: ${{ github.event_name }}"
+
+          # COMMIT SHA
+          # github.sha provides the commit SHA associated with this workflow run.
+          # For a push event, it generally identifies the tip commit of the pushed ref.
+          # For a pull_request event, it commonly identifies GitHub's temporary
+          # merge commit for the pull request, when that merge commit is available.
+          echo "Commit SHA: ${{ github.sha }}"
+
+          # GIT REF
+          # github.ref identifies the Git reference associated with the event.
+          # For a push to main, it is normally refs/heads/main.
+          # For a pull request targeting main, it is normally refs/pull/<number>/merge.
+          echo "Git Ref: ${{ github.ref }}"
+
+          # REPOSITORY
+          # github.repository gives the repository name in OWNER/REPOSITORY format.
+          # For example: tahashafiq175/githubactions-practice.
+          echo "Repository: ${{ github.repository }}"
+
+          
