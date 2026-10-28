@@ -2220,4 +2220,4 @@ The workflow declares which information it accepts. The person or calling workfl
 
 Once you understand this flow, inputs stop looking like confusing YAML syntax and start looking like what they really are: **a way to make automation configurable and reusable.**
 
-*CI/CD Learning Series — Part 7: Inputs in GitHub Actions*
+*CI/CD Learning Series — Part 5: Inputs in GitHub Actions*
